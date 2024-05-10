@@ -1,6 +1,6 @@
 import express from "express";
 import ProdutosRouter from "./routes/produtos.router";
-import swaggerRouter from "./swagger";
+import swaggerUi from 'swagger-ui-express';
 import AdministradorRouter from "./routes/administrador.router";
 import AssinaturasRouter from "./routes/assinaturas.router";
 import CargosRouter from "./routes/cargos.router";
@@ -13,6 +13,8 @@ import FuncionariosRouter from "./routes/funcionarios.router";
 import PlanosRouter from "./routes/planos.router";
 import RelatoriosRouter from "./routes/relatorios.router";
 import UsuariosRouter from "./routes/usuarios.router";
+import swaggerRouter from "./swagger";
+import specs from "./swagger";
 
 
 const app = express();
