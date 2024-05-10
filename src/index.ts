@@ -18,9 +18,8 @@ import specs from "./swagger";
 
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-
-console.log('olá mundo')
+app.use(express.json())
+const PORT = process.env.PORT || 3000
 
 app.get('/', (req, res) => {
     res.send('Olá, Mundo')
