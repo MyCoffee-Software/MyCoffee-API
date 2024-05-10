@@ -15,6 +15,7 @@ import RelatoriosRouter from "./routes/relatorios.router";
 import UsuariosRouter from "./routes/usuarios.router";
 import swaggerRouter from "./swagger";
 import specs from "./swagger";
+import { autorizar } from "./controllers/autenticacao.controller";
 
 
 const app = express();
@@ -35,7 +36,7 @@ app.use('/compras', ComprasRouter)
 app.use('/descricoes', DescricoesRouter)
 app.use('/funcionarios', FuncionariosRouter)
 app.use('/planos', PlanosRouter)
-app.use('/produtos', ProdutosRouter)
+app.use('/produtos', autorizar ,ProdutosRouter)
 app.use('/relatorios', RelatoriosRouter)
 app.use('/usuarios', UsuariosRouter)
 
