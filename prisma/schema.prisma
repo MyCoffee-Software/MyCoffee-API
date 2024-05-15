@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,150 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model admin {
+  idAdmin                                  BigInt  @id(map: "Admin_pkey") @default(autoincrement())
+  emailAdmin                               String  @unique(map: "Admin_emailAdmin_key")
+  senhaAdmin                               String  @unique(map: "Admin_senhaAdmin_key")
+  nomeCompletoAdmin                        String  @unique(map: "Admin_nomeCompletoAdmin_key")
+  excluido                                 Boolean
+  usuario_admin_idAdminTousuario           usuario @relation("admin_idAdminTousuario", fields: [idAdmin], references: [id], onDelete: Cascade, map: "Admin_idAdmin_fkey")
+  usuario_admin_emailAdminTousuario        usuario @relation("admin_emailAdminTousuario", fields: [emailAdmin], references: [email], onDelete: Cascade)
+  usuario_admin_nomeCompletoAdminTousuario usuario @relation("admin_nomeCompletoAdminTousuario", fields: [nomeCompletoAdmin], references: [nome_completo], onDelete: Cascade)
+  usuario_admin_senhaAdminTousuario        usuario @relation("admin_senhaAdminTousuario", fields: [senhaAdmin], references: [senha], onDelete: Cascade)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model assinatura {
+  idAssinatura    BigInt   @id @default(autoincrement())
+  formaPagamento  String
+  enderecoEntrega String
+  cpfSignatario   String
+  dataInicio      DateTime @db.Date
+  dataFim         DateTime @db.Date
+  valor           Float
+  excluido        Boolean
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model cargo {
+  idCargo   BigInt  @id @default(autoincrement())
+  excluido  Boolean
+  nome      String?
+  permissao String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model categoria {
+  idCategoria       BigInt  @id @default(autoincrement())
+  nomeCategoria     String
+  excluidoCategoria Boolean
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model cliente {
+  idCliente                                    BigInt    @id @default(autoincrement())
+  emailCliente                                 String    @unique
+  senhaCliente                                 String    @unique
+  nomeCompletoCliente                          String    @unique
+  excluido                                     Boolean
+  dataNascimento                               DateTime? @db.Date
+  endereco                                     String?
+  telefone                                     String?
+  cpf                                          String?
+  usuario_cliente_emailClienteTousuario        usuario   @relation("cliente_emailClienteTousuario", fields: [emailCliente], references: [email], onDelete: Cascade)
+  usuario_cliente_idClienteTousuario           usuario   @relation("cliente_idClienteTousuario", fields: [idCliente], references: [id], onDelete: Cascade)
+  usuario_cliente_nomeCompletoClienteTousuario usuario   @relation("cliente_nomeCompletoClienteTousuario", fields: [nomeCompletoCliente], references: [nome_completo], onDelete: Cascade)
+  usuario_cliente_senhaClienteTousuario        usuario   @relation("cliente_senhaClienteTousuario", fields: [senhaCliente], references: [senha], onDelete: Cascade)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model compra {
+  idCompra        BigInt   @id @default(autoincrement())
+  formaPagamento  String
+  dataPagamento   DateTime @db.Date
+  cpfComprador    String
+  enderecoEntrega String
+  excluido        Boolean
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model formatacao {
+  idFormatacao BigInt  @id @default(autoincrement())
+  nome         String?
+  html         String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model funcionario {
+  idFuncionario                                        BigInt  @id @default(autoincrement())
+  emailFuncionario                                     String  @unique
+  senhaFuncionario                                     String  @unique
+  nomeCompletoFuncionario                              String  @unique
+  excluido                                             Boolean
+  usuario_funcionario_emailFuncionarioTousuario        usuario @relation("funcionario_emailFuncionarioTousuario", fields: [emailFuncionario], references: [email], onDelete: Cascade)
+  usuario_funcionario_idFuncionarioTousuario           usuario @relation("funcionario_idFuncionarioTousuario", fields: [idFuncionario], references: [id], onDelete: Cascade)
+  usuario_funcionario_nomeCompletoFuncionarioTousuario usuario @relation("funcionario_nomeCompletoFuncionarioTousuario", fields: [nomeCompletoFuncionario], references: [nome_completo], onDelete: Cascade)
+  usuario_funcionario_senhaFuncionarioTousuario        usuario @relation("funcionario_senhaFuncionarioTousuario", fields: [senhaFuncionario], references: [senha], onDelete: Cascade)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model itemCarrinho {
+  valorUnitario Float   @id
+  quantidade    BigInt
+  excluido      Boolean
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model itemCompra {
+  valorUnitarioItemCompra Float   @id
+  quantidade              BigInt
+  excluido                Boolean
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model planoAssinatura {
+  idPlanoAssinatura   BigInt   @id @default(autoincrement())
+  nomePlanoAssinatura String
+  descontoPorcentual  Float
+  precoMensal         Float
+  precoAnual          Float
+  ativo               Boolean
+  descricao           String?
+  excluido            Boolean?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model produto {
+  idProduto                 BigInt  @id @default(autoincrement())
+  nomeProduto               String
+  preco                     Float
+  descricaoProduto          String
+  descontoPorcentualProduto Float
+  codigoDeBarras            String
+  marca                     String
+  excluido                  Boolean
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model usuario {
+  id                                                       BigInt       @id @default(autoincrement())
+  email                                                    String       @unique
+  senha                                                    String       @unique
+  nome_completo                                            String       @unique
+  excluido                                                 Boolean      @unique
+  admin_admin_idAdminTousuario                             admin?       @relation("admin_idAdminTousuario")
+  admin_admin_emailAdminTousuario                          admin?       @relation("admin_emailAdminTousuario")
+  admin_admin_nomeCompletoAdminTousuario                   admin?       @relation("admin_nomeCompletoAdminTousuario")
+  admin_admin_senhaAdminTousuario                          admin?       @relation("admin_senhaAdminTousuario")
+  cliente_cliente_emailClienteTousuario                    cliente?     @relation("cliente_emailClienteTousuario")
+  cliente_cliente_idClienteTousuario                       cliente?     @relation("cliente_idClienteTousuario")
+  cliente_cliente_nomeCompletoClienteTousuario             cliente?     @relation("cliente_nomeCompletoClienteTousuario")
+  cliente_cliente_senhaClienteTousuario                    cliente?     @relation("cliente_senhaClienteTousuario")
+  funcionario_funcionario_emailFuncionarioTousuario        funcionario? @relation("funcionario_emailFuncionarioTousuario")
+  funcionario_funcionario_idFuncionarioTousuario           funcionario? @relation("funcionario_idFuncionarioTousuario")
+  funcionario_funcionario_nomeCompletoFuncionarioTousuario funcionario? @relation("funcionario_nomeCompletoFuncionarioTousuario")
+  funcionario_funcionario_senhaFuncionarioTousuario        funcionario? @relation("funcionario_senhaFuncionarioTousuario")
 }
