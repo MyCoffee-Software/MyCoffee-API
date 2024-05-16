@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+
 model admin {
   idAdmin                                  BigInt  @id(map: "Admin_pkey") @default(autoincrement())
   emailAdmin                               String  @unique(map: "Admin_emailAdmin_key")
@@ -20,7 +20,7 @@ model admin {
   usuario_admin_senhaAdminTousuario        usuario @relation("admin_senhaAdminTousuario", fields: [senhaAdmin], references: [senha], onDelete: Cascade)
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+
 model assinatura {
   idAssinatura    BigInt   @id @default(autoincrement())
   formaPagamento  String
@@ -32,7 +32,7 @@ model assinatura {
   excluido        Boolean
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+
 model cargo {
   idCargo   BigInt  @id @default(autoincrement())
   excluido  Boolean
@@ -40,14 +40,14 @@ model cargo {
   permissao String?
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+
 model categoria {
   idCategoria       BigInt  @id @default(autoincrement())
   nomeCategoria     String
   excluidoCategoria Boolean
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+
 model cliente {
   idCliente                                    BigInt    @id @default(autoincrement())
   emailCliente                                 String    @unique
@@ -64,7 +64,7 @@ model cliente {
   usuario_cliente_senhaClienteTousuario        usuario   @relation("cliente_senhaClienteTousuario", fields: [senhaCliente], references: [senha], onDelete: Cascade)
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+
 model compra {
   idCompra        BigInt   @id @default(autoincrement())
   formaPagamento  String
@@ -74,14 +74,14 @@ model compra {
   excluido        Boolean
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+
 model formatacao {
   idFormatacao BigInt  @id @default(autoincrement())
   nome         String?
   html         String?
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+
 model funcionario {
   idFuncionario                                        BigInt  @id @default(autoincrement())
   emailFuncionario                                     String  @unique
@@ -94,21 +94,21 @@ model funcionario {
   usuario_funcionario_senhaFuncionarioTousuario        usuario @relation("funcionario_senhaFuncionarioTousuario", fields: [senhaFuncionario], references: [senha], onDelete: Cascade)
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+
 model itemCarrinho {
   valorUnitario Float   @id
   quantidade    BigInt
   excluido      Boolean
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+
 model itemCompra {
   valorUnitarioItemCompra Float   @id
   quantidade              BigInt
   excluido                Boolean
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+
 model planoAssinatura {
   idPlanoAssinatura   BigInt   @id @default(autoincrement())
   nomePlanoAssinatura String
@@ -120,7 +120,7 @@ model planoAssinatura {
   excluido            Boolean?
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+
 model produto {
   idProduto                 BigInt  @id @default(autoincrement())
   nomeProduto               String
@@ -132,13 +132,12 @@ model produto {
   excluido                  Boolean
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model usuario {
   id                                                       BigInt       @id @default(autoincrement())
   email                                                    String       @unique
   senha                                                    String       @unique
   nome_completo                                            String       @unique
-  excluido                                                 Boolean      @unique
+  excluido                                                 Boolean      
   admin_admin_idAdminTousuario                             admin?       @relation("admin_idAdminTousuario")
   admin_admin_emailAdminTousuario                          admin?       @relation("admin_emailAdminTousuario")
   admin_admin_nomeCompletoAdminTousuario                   admin?       @relation("admin_nomeCompletoAdminTousuario")
