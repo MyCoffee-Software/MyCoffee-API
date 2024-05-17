@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
 
 export function CriarPedido(res: Response, req: Request) {
-    console.log(req.user?.nomeCompleto)
+    res.status(200).json({msg: 'função criar pedido'})
 }

@@ -1,26 +1,28 @@
 import { NextFunction, Request, Response } from "express"
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 import { Usuario } from "../models/usuario"
 
 export async function authenticationMiddleware(req: Request, res: Response, next: NextFunction){
+    const JWT_SECRET = process.env.JWT_SECRET
     const authorizationHeader = req.headers.authorization
-
-    console.log('aqui', authorizationHeader)
     
     if (authorizationHeader) {
         const token = authorizationHeader.split(' ')[1]
-        console.log(token)
-        jwt.verify(token, 'chave123', (err, user) => {
-            if (err) return res.status(403).json({
-                error: 'Token inválido'
-            })
-
-            req.user = user as Usuario
+        jwt.verify(token, JWT_SECRET as string, (err, token) => {
+            if (err) {
+                console.error(err)
+                res.status(403).json({error: "Token inválido"})
+            }
+           
+            else {
+                
+                const user = (token as JwtPayload).user
+                req.user = user as Usuario
+                return next()
+            }
         })
     } else {
         req.user = undefined
+        return next()
     }
-
-    console.log(req.user)
-    next()
 }
