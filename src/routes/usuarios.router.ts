@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { autenticar } from "../controllers/autenticacao.controller";
+import { login } from "../controllers/auth.controller";
 
 const UsuariosRouter = Router();
 
@@ -22,7 +22,7 @@ UsuariosRouter.get('/', (req: Request, res: Response) => {
 
 /**
  *  @swagger
- *  /usuarios/validar:
+ *  /usuarios/login:
  *  post:
  *    summary: Retorna um token de autenticação
  *    description: Valida credenciais e retorna, se autenticado, um token válido por 1 minuto
@@ -33,12 +33,12 @@ UsuariosRouter.get('/', (req: Request, res: Response) => {
  *          schema:
  *            type: object
  *            required:
- *              - username
- *              - password
+ *              - email
+ *              - senha
  *            properties:
- *              username:
+ *              email:
  *                type: string
- *              password:
+ *              senha:
  *                type: string
  *    responses:
  *      200:
@@ -47,6 +47,6 @@ UsuariosRouter.get('/', (req: Request, res: Response) => {
  *        description: Não autenticado
  * 
  */
-UsuariosRouter.post('/validar', autenticar)
+UsuariosRouter.post('/login', login)
 
 export default UsuariosRouter;

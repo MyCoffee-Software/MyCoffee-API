@@ -1,8 +1,6 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import express from 'express';
-import fs from 'fs'
-import path from 'path'
 
 const swaggerRouter = express.Router()
 
@@ -14,6 +12,15 @@ const options: swaggerJsdoc.Options = {
       version: '1.0.0',
       description: 'Documentação da API para a minha aplicação',
     },
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
+    }
   },
   apis: ['./dist/routes/*.js'], // Caminho para os arquivos de rota
 };
