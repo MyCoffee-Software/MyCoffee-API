@@ -45,6 +45,8 @@ ProdutosRouter.get('/', authorizationMiddleware(), (req: Request, res: Response)
  *       '401':
  *         description: Não autorizado
  */
-ProdutosRouter.post('/', authorizationMiddleware("Administrador") ,CriarPedido)
+ProdutosRouter.post('/', authorizationMiddleware("Administrador") , (req: Request, res: Response) => {
+    res.send('Olá, você está na controladora Produtos (POST)')
+})
 
 export default ProdutosRouter;
