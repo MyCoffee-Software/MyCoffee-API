@@ -7,19 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model admin {
   idAdmin                                  BigInt  @id(map: "Admin_pkey") @default(autoincrement())
   emailAdmin                               String  @unique(map: "Admin_emailAdmin_key")
   senhaAdmin                               String  @unique(map: "Admin_senhaAdmin_key")
   nomeCompletoAdmin                        String  @unique(map: "Admin_nomeCompletoAdmin_key")
   excluido                                 Boolean
+  imagemAdmin                              String
   usuario_admin_idAdminTousuario           usuario @relation("admin_idAdminTousuario", fields: [idAdmin], references: [id], onDelete: Cascade, map: "Admin_idAdmin_fkey")
   usuario_admin_emailAdminTousuario        usuario @relation("admin_emailAdminTousuario", fields: [emailAdmin], references: [email], onDelete: Cascade)
+  usuario_admin_imagemAdminTousuario       usuario @relation("admin_imagemAdminTousuario", fields: [imagemAdmin], references: [imagem], onDelete: Cascade)
   usuario_admin_nomeCompletoAdminTousuario usuario @relation("admin_nomeCompletoAdminTousuario", fields: [nomeCompletoAdmin], references: [nome_completo], onDelete: Cascade)
   usuario_admin_senhaAdminTousuario        usuario @relation("admin_senhaAdminTousuario", fields: [senhaAdmin], references: [senha], onDelete: Cascade)
 }
-
 
 model assinatura {
   idAssinatura    BigInt   @id @default(autoincrement())
@@ -32,7 +32,6 @@ model assinatura {
   excluido        Boolean
 }
 
-
 model cargo {
   idCargo   BigInt  @id @default(autoincrement())
   excluido  Boolean
@@ -40,13 +39,11 @@ model cargo {
   permissao String?
 }
 
-
 model categoria {
   idCategoria       BigInt  @id @default(autoincrement())
   nomeCategoria     String
   excluidoCategoria Boolean
 }
-
 
 model cliente {
   idCliente                                    BigInt    @id @default(autoincrement())
@@ -58,12 +55,13 @@ model cliente {
   endereco                                     String?
   telefone                                     String?
   cpf                                          String?
+  imagemCliente                                String    @default("b")
   usuario_cliente_emailClienteTousuario        usuario   @relation("cliente_emailClienteTousuario", fields: [emailCliente], references: [email], onDelete: Cascade)
   usuario_cliente_idClienteTousuario           usuario   @relation("cliente_idClienteTousuario", fields: [idCliente], references: [id], onDelete: Cascade)
+  usuario_cliente_imagemClienteTousuario       usuario   @relation("cliente_imagemClienteTousuario", fields: [imagemCliente], references: [imagem], onDelete: Cascade)
   usuario_cliente_nomeCompletoClienteTousuario usuario   @relation("cliente_nomeCompletoClienteTousuario", fields: [nomeCompletoCliente], references: [nome_completo], onDelete: Cascade)
   usuario_cliente_senhaClienteTousuario        usuario   @relation("cliente_senhaClienteTousuario", fields: [senhaCliente], references: [senha], onDelete: Cascade)
 }
-
 
 model compra {
   idCompra        BigInt   @id @default(autoincrement())
@@ -74,13 +72,11 @@ model compra {
   excluido        Boolean
 }
 
-
 model formatacao {
   idFormatacao BigInt  @id @default(autoincrement())
   nome         String?
   html         String?
 }
-
 
 model funcionario {
   idFuncionario                                        BigInt  @id @default(autoincrement())
@@ -88,12 +84,13 @@ model funcionario {
   senhaFuncionario                                     String  @unique
   nomeCompletoFuncionario                              String  @unique
   excluido                                             Boolean
+  imagemFuncionario                                    String  @default("v")
   usuario_funcionario_emailFuncionarioTousuario        usuario @relation("funcionario_emailFuncionarioTousuario", fields: [emailFuncionario], references: [email], onDelete: Cascade)
   usuario_funcionario_idFuncionarioTousuario           usuario @relation("funcionario_idFuncionarioTousuario", fields: [idFuncionario], references: [id], onDelete: Cascade)
+  usuario_funcionario_imagemFuncionarioTousuario       usuario @relation("funcionario_imagemFuncionarioTousuario", fields: [imagemFuncionario], references: [imagem], onDelete: Cascade)
   usuario_funcionario_nomeCompletoFuncionarioTousuario usuario @relation("funcionario_nomeCompletoFuncionarioTousuario", fields: [nomeCompletoFuncionario], references: [nome_completo], onDelete: Cascade)
   usuario_funcionario_senhaFuncionarioTousuario        usuario @relation("funcionario_senhaFuncionarioTousuario", fields: [senhaFuncionario], references: [senha], onDelete: Cascade)
 }
-
 
 model itemCarrinho {
   valorUnitario Float   @id
@@ -101,25 +98,23 @@ model itemCarrinho {
   excluido      Boolean
 }
 
-
 model itemCompra {
   valorUnitarioItemCompra Float   @id
   quantidade              BigInt
   excluido                Boolean
 }
 
-
 model planoAssinatura {
-  idPlanoAssinatura   BigInt   @id @default(autoincrement())
-  nomePlanoAssinatura String
-  descontoPorcentual  Float
-  precoMensal         Float
-  precoAnual          Float
-  ativo               Boolean
-  descricao           String?
-  excluido            Boolean?
+  idPlanoAssinatura     BigInt   @id @default(autoincrement())
+  nomePlanoAssinatura   String
+  descontoPorcentual    Float
+  precoMensal           Float
+  precoAnual            Float
+  ativo                 Boolean
+  descricao             String?
+  excluido              Boolean?
+  imagemPlanoAssinatura String   @default("")
 }
-
 
 model produto {
   idProduto                 BigInt  @id @default(autoincrement())
@@ -130,24 +125,29 @@ model produto {
   codigoDeBarras            String
   marca                     String
   excluido                  Boolean
+  imagemProduto             String  @default("")
 }
 
 model usuario {
-  id                                                       BigInt       @id @default(autoincrement())
-  email                                                    String       @unique
-  senha                                                    String       @unique
-  nome_completo                                            String       @unique
-  excluido                                                 Boolean      
-  admin_admin_idAdminTousuario                             admin?       @relation("admin_idAdminTousuario")
-  admin_admin_emailAdminTousuario                          admin?       @relation("admin_emailAdminTousuario")
-  admin_admin_nomeCompletoAdminTousuario                   admin?       @relation("admin_nomeCompletoAdminTousuario")
-  admin_admin_senhaAdminTousuario                          admin?       @relation("admin_senhaAdminTousuario")
-  cliente_cliente_emailClienteTousuario                    cliente?     @relation("cliente_emailClienteTousuario")
-  cliente_cliente_idClienteTousuario                       cliente?     @relation("cliente_idClienteTousuario")
-  cliente_cliente_nomeCompletoClienteTousuario             cliente?     @relation("cliente_nomeCompletoClienteTousuario")
-  cliente_cliente_senhaClienteTousuario                    cliente?     @relation("cliente_senhaClienteTousuario")
-  funcionario_funcionario_emailFuncionarioTousuario        funcionario? @relation("funcionario_emailFuncionarioTousuario")
-  funcionario_funcionario_idFuncionarioTousuario           funcionario? @relation("funcionario_idFuncionarioTousuario")
-  funcionario_funcionario_nomeCompletoFuncionarioTousuario funcionario? @relation("funcionario_nomeCompletoFuncionarioTousuario")
-  funcionario_funcionario_senhaFuncionarioTousuario        funcionario? @relation("funcionario_senhaFuncionarioTousuario")
+  id                                                       BigInt        @id @unique @default(autoincrement())
+  email                                                    String        @unique
+  senha                                                    String        @unique
+  nome_completo                                            String        @unique
+  excluido                                                 Boolean
+  imagem                                                   String        @unique @default("")
+  admin_admin_idAdminTousuario                             admin?        @relation("admin_idAdminTousuario")
+  admin_admin_emailAdminTousuario                          admin?        @relation("admin_emailAdminTousuario")
+  admin_admin_imagemAdminTousuario                         admin[]       @relation("admin_imagemAdminTousuario")
+  admin_admin_nomeCompletoAdminTousuario                   admin?        @relation("admin_nomeCompletoAdminTousuario")
+  admin_admin_senhaAdminTousuario                          admin?        @relation("admin_senhaAdminTousuario")
+  cliente_cliente_emailClienteTousuario                    cliente?      @relation("cliente_emailClienteTousuario")
+  cliente_cliente_idClienteTousuario                       cliente?      @relation("cliente_idClienteTousuario")
+  cliente_cliente_imagemClienteTousuario                   cliente[]     @relation("cliente_imagemClienteTousuario")
+  cliente_cliente_nomeCompletoClienteTousuario             cliente?      @relation("cliente_nomeCompletoClienteTousuario")
+  cliente_cliente_senhaClienteTousuario                    cliente?      @relation("cliente_senhaClienteTousuario")
+  funcionario_funcionario_emailFuncionarioTousuario        funcionario?  @relation("funcionario_emailFuncionarioTousuario")
+  funcionario_funcionario_idFuncionarioTousuario           funcionario?  @relation("funcionario_idFuncionarioTousuario")
+  funcionario_funcionario_imagemFuncionarioTousuario       funcionario[] @relation("funcionario_imagemFuncionarioTousuario")
+  funcionario_funcionario_nomeCompletoFuncionarioTousuario funcionario?  @relation("funcionario_nomeCompletoFuncionarioTousuario")
+  funcionario_funcionario_senhaFuncionarioTousuario        funcionario?  @relation("funcionario_senhaFuncionarioTousuario")
 }
