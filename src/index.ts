@@ -1,9 +1,11 @@
-import express, { Router } from "express";
+import express from "express";
 import swaggerRouter from "./swagger";
 import router from "./routes/router";
+import * as dotenv from 'dotenv';
 
+dotenv.config();
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.API_PORT
 
 const app = express();
 app.use(express.json())
