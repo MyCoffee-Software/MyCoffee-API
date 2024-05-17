@@ -22,8 +22,8 @@ router.use(authenticationMiddleware)
  * @swagger
  * /:
  *   get:
- *     tags: ['ello World!']
- *     summary: Hello World!
+ *     tags: ['Olá Mundo!']
+ *     summary: Olá, Mundo!
  *     responses:
  *       200:
  *         description: Retorna uma string 'Olá, Mundo'

@@ -15,8 +15,6 @@ app.use(router)
 
 app.use(swaggerRouter)
 
-const Prisma = new PrismaClient()
-
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`)
 })
