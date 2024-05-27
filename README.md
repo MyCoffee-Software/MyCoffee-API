@@ -1,18 +1,38 @@
-# API MyCoffee
-API base do projeto MyCoffee, uma loja de produtos e assinaturas de café, abaixo é demonstrado como utiliza-lá direto do github.
+# MyCoffee-API (Backend)
 
-### Clone o repositório, instale os pacotes do node e vefifique as rotas localmente
+Esta é uma API backend simples construída usando TypeScript.
 
-``` 
-//No seu diretório local
-git clone https://github.com/zowe/MyCoffee-API
-cd MyCoffee-API
-npm install
-npm start
-```
+## Pré-requisitos
 
-Abra o seu navegador local e verifique acessando:    
-`http://localhost:5432/mydb/`   
-   
-Ou utilizando o swagger no navegador local utilizando:
-`http://localhost:3200/`
+- Node.js (v14.x ou superior)
+- npm (Node Package Manager)
+
+## Instalação
+
+1. Clone este repositório:
+
+2. Navegue até o diretório do projeto:
+
+3. Instale as dependências:
+```npm install``` ou ```npm i```
+
+## Configuração
+Configure as variáveis de ambiente:
+
+Crie um arquivo .env na raiz do projeto
+Defina as variáveis de ambiente necessárias, orientando-se pelo arquivo ```.env.example``` contido neste repositório
+
+## Execução
+### Execute a build do servidor:
+```npm run build```
+
+### Execute o próprio servidor:
+```npm start```
+
+### Execute em modo desenvolvedor:
+```npm run dev```
+
+# PRONTO!
+Agora a aplicação está disponível para uso.
+
+Para acessar a documentação das rotas, acesse a rota ```/api-docs``` e utilize o SWAGGER.
