@@ -1,14 +1,12 @@
 import { NextFunction, Request, Response} from "express";
 import bycript from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import prisma from "../db";
+import repository from "../repository/repository";
 
 export async function login(req: Request, res: Response) {
     const JWT_SECRET = process.env.JWT_SECRET
-    console.log('controladora', JWT_SECRET)
-
     const {email, senha} = req.body
-    const usuario = await prisma.usuario.findUnique({where: {email}})
+    const usuario = await repository.usuario.getByEmail(email)
 
 
     if (!usuario) {
@@ -16,8 +14,6 @@ export async function login(req: Request, res: Response) {
             error: 'Usuário inválido'
         })
     } else {
-        
-        console.log(await bycript.hash(usuario?.senha, 10))
         const match = await bycript.compare(senha, usuario.senha)
 
         if (!match){
@@ -29,7 +25,7 @@ export async function login(req: Request, res: Response) {
         const payload = {
             user: {
                 id: Number(usuario.id),
-                nome: usuario.nome_completo
+                nome: usuario.nomeCompleto
             }
         }
 
