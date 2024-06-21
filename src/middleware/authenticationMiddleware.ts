@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express"
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import { Usuario } from "../models/usuario"
 
-export async function authenticationMiddleware(req: Request, res: Response, next: NextFunction){
+async function authenticationMiddleware(req: Request, res: Response, next: NextFunction){
     const JWT_SECRET = process.env.JWT_SECRET
     const authorizationHeader = req.headers.authorization
     
@@ -26,3 +26,5 @@ export async function authenticationMiddleware(req: Request, res: Response, next
         return next()
     }
 }
+
+export default authenticationMiddleware

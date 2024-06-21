@@ -1,30 +1,24 @@
 import { NextFunction, Request, Response } from "express"
 import { Permissao } from "../models/permissao"
 import jwt from "jsonwebtoken"
+import AuthController from '../controllers/auth.controller'
 
-
-export function authorizationMiddleware(...permissoes: Array<Permissao>){
-    return (req: Request, res: Response, next: NextFunction) => {
-        if (permissoes.length === 0){
-            console.log('Nenhuma permissão exigida')
+function authorizationMiddleware(...permissoesRequeridas: Array<Permissao>){
+    return async (req: Request, res: Response, next: NextFunction) => {
+        const permissoesDadas = await AuthController.getPermissoes(req.user)
+        
+        if (permissoesDadas.includes('Administrador')){
             return next()
         }
 
-        if ( req.user?.id !== undefined)
+        if (permissoesRequeridas.every((permissao) => permissoesDadas.includes(permissao))){
+            return next()
+        }
 
-        console.log(permissoes)
-        const token = req.header('x-auth-token')
-    
-        if (!token) {
-            return res.status(401).json({ msg: 'Não há token, autorização negada'})
-        }
-    
-        try {
-            const tokenDecodificado = jwt.verify(token, 'chave123')
-            console.log(tokenDecodificado)
-            next()
-        } catch (err) {
-            res.status(401).json({msg: 'Token inválido'})
-        }
+        res.status(401).send({
+            message: "Acesso negado."
+        })
     }
 }
+
+export default authorizationMiddleware

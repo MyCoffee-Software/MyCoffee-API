@@ -2,8 +2,10 @@ import { NextFunction, Request, Response} from "express";
 import bycript from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import repository from "../repository/repository";
+import { Usuario } from "../models/usuario";
+import { Permissao } from "../models/permissao";
 
-export async function login(req: Request, res: Response) {
+async function login(req: Request, res: Response) {
     const JWT_SECRET = process.env.JWT_SECRET
     const {email, senha} = req.body
     const usuario = await repository.usuario.getByEmail(email)
@@ -40,3 +42,30 @@ export async function login(req: Request, res: Response) {
         )
     }
 }
+
+async function getPermissoes(usuario: Usuario): Promise<Permissao[]> {
+    if (usuario === undefined){
+        return []
+    }
+
+    const admin = await repository.admin.getByUsuario(usuario)
+    console.log("admin", admin)
+    if (admin !== undefined){
+        return ['Administrador']
+    }
+        
+    const funcionario = await repository.funcionario.getByUsuario(usuario) 
+    console.log("funcionario", funcionario)
+    if (funcionario !== undefined){
+        return (await repository.cargo.getByFuncionario(funcionario)).permissoes
+    }
+
+    const cliente = await repository.cliente.getByUsuario(usuario)
+    console.log("cliente", cliente)
+    if (cliente !== undefined){
+        return ['Cliente Logado']
+    }
+    
+}
+
+export default {login, getPermissoes}

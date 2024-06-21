@@ -1,15 +1,15 @@
-import { AdminRepository } from "./admin.repository";
-import { CargoRepository } from "./cargo.repository";
-import { ClienteRepository } from "./cliente.repositoy";
-import { FuncionarioRepository } from "./funcionario.repository";
-import { UsuarioRepository } from "./usuario.repository";
+import Admin from "./admin.repository";
+import Cargo  from "./cargo.repository";
+import Cliente from "./cliente.repositoy";
+import Funcionario from "./funcionario.repository";
+import Usuario from "./usuario.repository";
 
 const repository = {
-    usuario: new UsuarioRepository(),
-    admin: new AdminRepository(),
-    funcionario: new FuncionarioRepository(),
-    cargo: new CargoRepository(),
-    cliente: new ClienteRepository(),
+    usuario: Usuario,
+    admin: Admin,
+    funcionario: Funcionario,
+    cargo: Cargo,
+    cliente: Cliente,
 }
 
 export default repository
