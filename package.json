@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsc-watch --onSuccess \"npm run start\"",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "start": "nodemon dist/index.js",
     "build": "tsc -p ."
   },
@@ -22,6 +22,7 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "tsc-watch": "^6.2.0",
     "typescript": "^5.4.5"
   },
