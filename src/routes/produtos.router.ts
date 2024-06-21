@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { CriarPedido } from "../controllers/produto.controller";
-import { authorizationMiddleware } from "../middleware/authorizationMiddleware";
+import authorization from "../middleware/authorizationMiddleware";
 import { Permissao } from "../models/permissao";
 
 const ProdutosRouter = Router();
@@ -35,7 +35,7 @@ const ProdutosRouter = Router();
  *       200:
  *         description: Retorna uma lista de clientes
  */
-ProdutosRouter.get('/', authorizationMiddleware(), (req: Request, res: Response) => {
+ProdutosRouter.get('/', authorization(), (req: Request, res: Response) => {
     res.send('Olá, você está na controladora Produtos')
 })
 
@@ -66,7 +66,7 @@ ProdutosRouter.get('/', authorizationMiddleware(), (req: Request, res: Response)
  *       '401':
  *         description: Não autorizado
  */
-ProdutosRouter.post('/', authorizationMiddleware("Administrador") , (req: Request, res: Response) => {
+ProdutosRouter.post('/', authorization('Administrador'), (req: Request, res: Response) => {
     res.send('Olá, você está na controladora Produtos (POST)')
 })
 

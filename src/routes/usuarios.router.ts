@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { login } from "../controllers/auth.controller";
+import authController from "../controllers/auth.controller";
 
 const UsuariosRouter = Router();
 
@@ -49,7 +49,7 @@ UsuariosRouter.get('/', (req: Request, res: Response) => {
  *        description: Não autenticado
  * 
  */
-UsuariosRouter.post('/login', login)
+UsuariosRouter.post('/login', authController.login)
 
 
 

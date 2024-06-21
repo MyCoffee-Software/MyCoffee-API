@@ -1,9 +1,11 @@
 import prisma from "../db";
 import { Usuario } from "../models/usuario";
 
-export class UsuarioRepository {
-    async getByEmail(email: string): Promise<Usuario>{
-        const queryUsuario = await prisma.usuario.findUnique({where: {email}})
+
+async function getByEmail(email: string): Promise<Usuario>{
+    const queryUsuario = await prisma.usuario.findUnique({where: {email}})
+
+    if (queryUsuario){
         const usuario: Usuario = {
             id: queryUsuario.id,
             email: queryUsuario.email,
@@ -13,4 +15,8 @@ export class UsuarioRepository {
         } 
         return usuario
     }
+
+    return null
 }
+
+export default {getByEmail}
