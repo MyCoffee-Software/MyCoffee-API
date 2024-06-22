@@ -27,19 +27,19 @@ async function login(req: Request, res: Response) {
         const payload = {
             user: {
                 id: Number(usuario.id),
-                nome: usuario.nomeCompleto
+                nome: usuario.nomeCompleto,
+                email: usuario.email,
+                imagem: usuario.imagem,
             }
         }
 
-        jwt.sign(
+        const token = jwt.sign(
             payload,
             JWT_SECRET as string,
-            {expiresIn: '10m'},
-            (err, token) => {
-                if (err) throw err
-                res.json({token})
-            }
+            {expiresIn: '10m'}
         )
+
+        return res.status(200).json({token, payload})
     }
 }
 

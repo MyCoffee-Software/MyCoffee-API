@@ -33,9 +33,10 @@ model cargo {
 }
 
 model categoria {
-  idCategoria       BigInt  @id @default(autoincrement())
+  idCategoria       BigInt              @id @default(autoincrement())
   nomeCategoria     String
   excluidoCategoria Boolean
+  produtosCategoria produtosCategoria[]
 }
 
 model cliente {
@@ -96,7 +97,7 @@ model planoAssinatura {
 }
 
 model produto {
-  idProduto                 BigInt  @id @default(autoincrement())
+  idProduto                 BigInt              @id @default(autoincrement())
   nomeProduto               String
   preco                     Float
   descricaoProduto          String
@@ -104,7 +105,8 @@ model produto {
   codigoDeBarras            String
   marca                     String
   excluido                  Boolean
-  imagemProduto             String  @default("")
+  imagemProduto             String              @default("")
+  produtosCategoria         produtosCategoria[]
 }
 
 model usuario {
@@ -127,4 +129,13 @@ model permissaoCargo {
   cargo     cargo  @relation(fields: [idCargo], references: [idCargo], onDelete: NoAction)
 
   @@id([idCargo, permissao])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model produtosCategoria {
+  idProdutos          BigInt
+  idCategorias        BigInt
+  idProdutoCategorias BigInt    @id @default(autoincrement())
+  categoria           categoria @relation(fields: [idCategorias], references: [idCategoria], onDelete: Cascade)
+  produto             produto   @relation(fields: [idProdutos], references: [idProduto], onDelete: Cascade)
 }
