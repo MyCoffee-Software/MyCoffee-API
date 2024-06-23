@@ -1,15 +1,31 @@
-export type Permissao = 
-    'Cliente Logado' |
-    'Administrador' |
-    'Gerenciar Produto' |
-    'Gerenciar Categoria' |
-    'Gerenciar Assinatura' |
-    'Gerenciar Relatório'
+import { z } from 'zod'
 
-export function isPermissao(object: unknown): object is Permissao{
-    if (typeof object == 'string'){
-        return ['Administrador', 'Gerenciar Produto', 'Gerenciar Categoria', 'Gerenciar Assinatura', 'Gerenciar Relatório', 'Cliente Logado'].includes(object)
-    }
+export const PermissaoSchema = z.enum([
+    'Cliente',
+    'Administrador',
+    'Funcionario',
+    'Gerenciar Produto',
+    'Gerenciar Categoria',
+    'Gerenciar Assinatura',
+    'Gerenciar Relatório',
+])
 
-    return false
+export type Permissao = z.infer<typeof PermissaoSchema>
+
+export function isPermissao(obj: any): obj is Permissao {
+    return typeof obj === 'string' &&
+        (
+            obj === 'Cliente' ||
+            obj === 'Administrador' ||
+            obj === 'Funcionario' ||
+            obj === 'Gerenciar Produto' ||
+            obj === 'Gerenciar Categoria' ||
+            obj === 'Gerenciar Assinatura' ||
+            obj === 'Gerenciar Relatório'
+        );
+}
+
+export function isPermissoes(obj: unknown): obj is Permissao[]{
+    return Array.isArray(obj) &&
+        obj.every((o) => isPermissao(o))
 }

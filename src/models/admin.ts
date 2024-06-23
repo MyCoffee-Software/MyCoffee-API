@@ -5,5 +5,8 @@ export interface Admin extends Usuario{
 }
 
 export function isAdmin<T extends Usuario>(object: Usuario): object is Admin {
-    return 'adminExcluido' in object
+    return(
+        'adminExcluido' in object &&
+        typeof object === 'boolean'
+    ) 
 }

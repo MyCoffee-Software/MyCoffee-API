@@ -7,6 +7,7 @@ import { Permissao } from "../models/permissao";
 
 async function login(req: Request, res: Response) {
     const JWT_SECRET = process.env.JWT_SECRET
+    const JWT_EXPIRATION = process.env.JWT_EXPIRATION
     const {email, senha} = req.body
     const usuario = await repository.usuario.getByEmail(email)
 
@@ -36,7 +37,7 @@ async function login(req: Request, res: Response) {
         const token = jwt.sign(
             payload,
             JWT_SECRET as string,
-            {expiresIn: '10m'}
+            {expiresIn: JWT_EXPIRATION}
         )
 
         return res.status(200).json({token, payload})
@@ -49,7 +50,6 @@ async function getPermissoes(usuario: Usuario): Promise<Permissao[]> {
     }
 
     const admin = await repository.admin.getByUsuario(usuario)
-    console.log("admin", admin)
     if (admin !== undefined){
         return ['Administrador']
     }
@@ -63,7 +63,7 @@ async function getPermissoes(usuario: Usuario): Promise<Permissao[]> {
     const cliente = await repository.cliente.getByUsuario(usuario)
     console.log("cliente", cliente)
     if (cliente !== undefined){
-        return ['Cliente Logado']
+        return ['Cliente']
     }
     
 }
