@@ -1,5 +1,20 @@
 import { z } from 'zod'
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Permissao:
+ *       type: string
+ *       enum:
+ *         - Cliente
+ *         - Gerenciar Produto
+ *         - Gerenciar Categoria
+ *         - Gerenciar Assinatura
+ *         - Gerenciar Relatório
+ *       description: Tipos de permissão
+ */
+
 export const PermissaoSchema = z.enum([
     'Cliente',
     'Administrador',

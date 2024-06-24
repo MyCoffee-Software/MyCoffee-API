@@ -8,7 +8,7 @@ async function getByFuncionario(Funcionario: Funcionario): Promise<Cargo>{
   const queryCargo = await prisma.cargo.findUnique({where: {idCargo: Funcionario.idCargo, excluido: false}, include: {permissaoCargo: true}})
   if (queryCargo){
     const Cargo: Cargo = {
-        id: queryCargo.idCargo,
+        id: Number(queryCargo.idCargo),
         nome: queryCargo.nome,
         permissoes : queryCargo.permissaoCargo.map((permissao) => isPermissao(permissao)? permissao : null),
         excluido: queryCargo.excluido,
@@ -17,15 +17,14 @@ async function getByFuncionario(Funcionario: Funcionario): Promise<Cargo>{
   }
 }
 
-async function getById(id: bigint): Promise<Cargo>{
+async function getById(id: number): Promise<Cargo>{
   const queryResult = await prisma.cargo.findUnique({where: {idCargo: id, excluido: false}, include: {permissaoCargo: true}})
 
   if(queryResult){
     const cargo:Cargo = {
-      id: queryResult.idCargo,
+      id: Number(queryResult.idCargo),
       nome: queryResult.nome,
       excluido: queryResult.excluido,
-      permissoes: queryResult.permissaoCargo.map((permissao) => isPermissao(permissao)? permissao : null).filter((permissao) => permissao != null)
     }
   
     return cargo
@@ -36,17 +35,14 @@ async function getAll(paginacao: {pagina: number, limite: number}): Promise<Carg
   const queryResult = await prisma.cargo.findMany({
     where: {excluido: false},
     skip: paginacao.limite*(paginacao.pagina-1), 
-    take: paginacao.limite, 
-    include: {permissaoCargo: true,
-  }})
+    take: paginacao.limite, })
 
   if(queryResult.length > 0){
     const cargos: Cargo[] = queryResult.map((r) => {
       const cargo: Cargo = {
-        id: r.idCargo,
+        id: Number(r.idCargo),
         nome: r.nome,
         excluido: r.excluido,
-        permissoes: r.permissaoCargo.map((permissao) => isPermissao(permissao)? permissao : null).filter((permissao) => permissao != null)
       }
     
       return cargo
@@ -60,7 +56,6 @@ async function getAll(paginacao: {pagina: number, limite: number}): Promise<Carg
 async function create(novoCargo: Cargo): Promise<Cargo> {
   const queryResult = await prisma.cargo.create({
     data: {
-      idCargo: novoCargo.id,
       nome: novoCargo.nome,
       excluido: false
     }
@@ -68,7 +63,7 @@ async function create(novoCargo: Cargo): Promise<Cargo> {
 
   if (queryResult != undefined){
     const cargo: Cargo = {
-      id: queryResult.idCargo,
+      id: Number(queryResult.idCargo),
       nome: queryResult.nome,
       excluido: queryResult.excluido,
     }
@@ -77,4 +72,21 @@ async function create(novoCargo: Cargo): Promise<Cargo> {
   }
 }
 
-export default {getByFuncionario, getById, getAll, create}
+async function update(novoCargo: Partial<Cargo>, idCargo: number){
+  const queryResult = await prisma.cargo.update({
+   data: novoCargo,
+   where: {idCargo, excluido: false} 
+  })
+
+  if (queryResult != undefined){
+    const cargo: Cargo = {
+      id: Number(queryResult.idCargo),
+      nome: queryResult.nome,
+      excluido: queryResult.excluido
+    }
+
+    return cargo
+  }
+}
+
+export default {getByFuncionario, getById, getAll, create, update}

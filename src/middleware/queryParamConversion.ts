@@ -4,7 +4,6 @@ type queryType = 'bigint' | 'int' | 'string'
 
 export default (queryTypeMap: {[param: string ]:queryType }) => {
     return (req: Request, res: Response, next: NextFunction) => {
-        console.log('aqui')
         req.newQuery = {}
         for (const param in req.query){
             if (queryTypeMap[param]){

@@ -1,11 +1,29 @@
 import { Permissao, PermissaoSchema, isPermissao, isPermissoes } from "./permissao"
 import { z } from 'zod'
 
-const CargoSchema = z.object({
-    id: z.bigint(),
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Cargo:
+ *       type: object
+ *       properties:
+ *         nome:
+ *           type: string
+ *           description: Nome do cargo
+ *           example: "Vendedor"
+ *         permissoes:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Permissao'
+ *           description: Lista de permissões do cargo
+ */
+
+export const CargoSchema = z.object({
+    id: z.number().optional(),
     nome: z.string(),
     permissoes: z.array(PermissaoSchema).optional(),
-    excluido: z.boolean()
+    excluido: z.boolean().optional()
 })
 
 export type Cargo = z.infer<typeof CargoSchema>

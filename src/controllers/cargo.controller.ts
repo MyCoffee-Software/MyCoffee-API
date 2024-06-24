@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { number, z } from 'zod';
 import repository from "../repository/repository";
-import { isCargo } from "../models/cargo";
+import { CargoSchema, isCargo } from "../models/cargo";
 
 async function get(req: Request, res: Response) {
     const Query = req.newQuery
     const QuerySchema = z.union([
         z.object({
-            id: z.bigint()
+            id: z.number()
         }),
         z.object({
             pagina: z.number(),
@@ -23,8 +23,10 @@ async function get(req: Request, res: Response) {
 
 
     if ('id' in safeParse.data){
-        const result = await repository.cargo.getById(BigInt(safeParse.data.id))
-        console.log(result)
+        const result = await repository.cargo.getById(safeParse.data.id)
+        if (result) {
+            result.permissoes = await repository.permissoesCargo.getByCargo(result)
+        }
         return res.status(200).json(result)
     }
 
@@ -36,18 +38,31 @@ async function get(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
     const novoCargo = req.body
-    if (!isCargo(novoCargo)){
-        res.status(400).send({
-            error: 'Corpo de requisição deveria informar um cargo, com nome e permissões'
-        })
+
+    const safeParse = CargoSchema.safeParse(req.body)
+
+    if (!safeParse.success){
+        res.status(400).json(safeParse.error.errors)
     } else {
-        const cargo = await repository.cargo.create(novoCargo)
-        if (cargo) {
-            cargo.permissoes = await repository.permissoesCargo.createMany(['Funcionario', ...novoCargo.permissoes], cargo.id)
+        const result = await repository.cargo.create(safeParse.data)
+        console.log(result)
+        if (result) {
+            result.permissoes = await repository.permissoesCargo.createMany(['Funcionario', ...novoCargo.permissoes], result.id)
         }
         
-        return res.status(200).json(cargo)
+        return res.status(200).json(result)
     }
 }
 
-export default {get, create}
+async function update(req: Request, res: Response) {
+    const Query = req.newQuery
+    const Body = req.body
+
+    const resultado = await repository.cargo.update(Body, Query.id)
+    if (resultado != undefined){
+        resultado.permissoes = await repository.permissoesCargo.updateByCargo(Body)
+    }
+
+    res.status(200).json(resultado)
+}
+export default {get, create, update}
