@@ -17,7 +17,7 @@ async function login(req: Request, res: Response) {
             error: 'Usuário inválido'
         })
     } else {
-        const match = await bycript.compare(senha, usuario.senha)
+        const match = await repository.usuario.verifyPassword(email, senha)
 
         if (!match){
             res.status(400).json({
@@ -45,6 +45,7 @@ async function login(req: Request, res: Response) {
 }
 
 async function getPermissoes(usuario: Usuario): Promise<Permissao[]> {
+    console.log(usuario)
     if (usuario === undefined){
         return []
     }
@@ -54,10 +55,13 @@ async function getPermissoes(usuario: Usuario): Promise<Permissao[]> {
         return ['Administrador']
     }
         
-    const funcionario = await repository.funcionario.getByUsuario(usuario) 
-    console.log("funcionario", funcionario)
+    const funcionario = await repository.funcionario.getById(usuario.id) 
     if (funcionario !== undefined){
-        return (await repository.cargo.getByFuncionario(funcionario)).permissoes
+        const cargo = await repository.cargo.getById(funcionario.idCargo)
+        console.log(cargo)
+        if (cargo != undefined){
+            return repository.permissoesCargo.getByCargo(cargo)
+        }
     }
 
     const cliente = await repository.cliente.getByUsuario(usuario)

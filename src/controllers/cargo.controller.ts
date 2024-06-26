@@ -64,9 +64,7 @@ async function update(req: Request, res: Response) {
 
 async function Delete(req: Request, res: Response) {
     const Query = req.newQuery
-    console.log('!!!!!!!!!!!!')
     const resultado = await repository.cargo.Delete(Query.id)
-    console.log(resultado)
     if (resultado != undefined){
         res.status(200).json(resultado)    
     }    

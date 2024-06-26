@@ -3,6 +3,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken'
 import { Usuario } from "../models/usuario"
 
 async function authenticationMiddleware(req: Request, res: Response, next: NextFunction){
+    console.log("Autenticando...")
     const JWT_SECRET = process.env.JWT_SECRET
     const authorizationHeader = req.headers.authorization
     

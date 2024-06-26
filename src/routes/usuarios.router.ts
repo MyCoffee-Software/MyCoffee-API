@@ -51,6 +51,8 @@ UsuariosRouter.get('/', (req: Request, res: Response) => {
  */
 UsuariosRouter.post('/login', authController.login)
 
+UsuariosRouter.post('')
+
 
 
 /**
