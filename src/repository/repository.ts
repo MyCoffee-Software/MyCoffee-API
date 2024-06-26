@@ -5,7 +5,8 @@ import Funcionario from "./funcionario.repository";
 import Usuario from "./usuario.repository";
 import Produto from "./produto.repository";
 import Categoria from "./categoria.repositoy";
-import PermissoesCargo from "./permissaoCargo.repository"
+import PermissoesCargo from "./permissaoCargo.repository";
+import Plano from "./planos.repository";
 
 const repository = {
     usuario: Usuario,
@@ -16,6 +17,7 @@ const repository = {
     cliente: Cliente,
     produto: Produto,
     categoria: Categoria,
+    plano: Plano,
 }
 
 export default repository
