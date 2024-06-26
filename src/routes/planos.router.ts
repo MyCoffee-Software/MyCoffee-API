@@ -1,8 +1,13 @@
 import { Request, Response, Router } from "express";
-import { PlanoRepository } from "../repository/planos.repository";
+import controller from "../controllers/plano.controller";
+import queryParamConversion from "../middleware/queryParamConversion";
+import authorization from "../middleware/authorizationMiddleware";
+import safeBodyParser from "../middleware/safeBodyParser";
+import { PlanoSchema } from "../models/plano";
+import safeQueryParser from "../middleware/safeQueryParser";
+import { idSchema } from "../utils/QueryParamsSchemas";
 
 const PlanosRouter = Router();
-const planoRepository = new PlanoRepository();
 
 /**
  * @swagger
@@ -15,63 +20,35 @@ const planoRepository = new PlanoRepository();
  * @swagger
  * /planos:
  *   get:
- *     summary: Retorna todos os planos
- *     tags: [Planos]
- *     responses:
- *       200:
- *         description: Lista de planos
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Plano'
- */
-PlanosRouter.get('/', async (req: Request, res: Response) => {
-    try {
-        const planos = await planoRepository.getAll();
-        res.json(planos);
-    } catch (error) {
-        res.status(500).json({ error: 'Erro interno do servidor' });
-    }
-});
-
-/**
- * @swagger
- * /planos/{id}:
- *   get:
- *     summary: Retorna um plano pelo ID
+ *     summary: Obtém um ou todos os planos
  *     tags: [Planos]
  *     parameters:
- *       - in: path
- *         name: id
- *         required: true
+ *       - in: query
+ *         name: limite
  *         schema:
  *           type: integer
- *         description: ID do plano
+ *           description: A quantidade de itens a ser retornada
+ *           required: false
+ *       - in: query
+ *         name: pagina
+ *         schema:
+ *           type: integer
+ *           description: A página de itens a ser retornada
+ *           required: false
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: integer
+ *           description: O id do plano a ser retornada
+ *           required: false
+ * 
  *     responses:
- *       200:
- *         description: Plano encontrado
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Plano'
- *       404:
- *         description: Plano não encontrado
+ *       '200':
+ *         description: Plano(s) retornado com sucesso
+ *       '401':
+ *         description: Não autorizado
  */
-PlanosRouter.get('/:id', async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        const plano = await planoRepository.getById(Number(id));
-        if (plano) {
-            res.json(plano);
-        } else {
-            res.status(404).json({ error: 'Plano não encontrado' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: 'Erro interno do servidor' });
-    }
-});
+PlanosRouter.get('/', queryParamConversion({ id: "int", pagina: "int", limite: "int"}), controller.get);
 
 /**
  * @swagger
@@ -79,6 +56,8 @@ PlanosRouter.get('/:id', async (req: Request, res: Response) => {
  *   post:
  *     summary: Cria um novo plano
  *     tags: [Planos]
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -92,32 +71,29 @@ PlanosRouter.get('/:id', async (req: Request, res: Response) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Plano'
- *       500:
- *         description: Erro interno do servidor
+ *       400:
+ *         description: Dados inválidos
  */
-PlanosRouter.post('/', async (req: Request, res: Response) => {
-    try {
-        const plano = req.body;
-        const novoPlano = await planoRepository.create(plano);
-        res.status(201).json(novoPlano);
-    } catch (error) {
-        res.status(500).json({ error: 'Erro interno do servidor' });
-    }
-});
+PlanosRouter.post('/',
+    /*authorization('Administrador'),*/ 
+    safeBodyParser(PlanoSchema), 
+    controller.create)
 
 /**
  * @swagger
- * /planos/{id}:
+ * /planos:
  *   put:
- *     summary: Atualiza um plano existente
+ *     summary: Altera um plano
  *     tags: [Planos]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
- *       - in: path
+ *       - in: query
  *         name: id
- *         required: true
  *         schema:
  *           type: integer
- *         description: ID do plano
+ *         description: O id do plano a ser alterado
+ *         required: true
  *     requestBody:
  *       required: true
  *       content:
@@ -125,69 +101,51 @@ PlanosRouter.post('/', async (req: Request, res: Response) => {
  *           schema:
  *             $ref: '#/components/schemas/Plano'
  *     responses:
- *       200:
- *         description: Plano atualizado com sucesso
+ *       201:
+ *         description: Plano alterado com sucesso
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Plano'
- *       404:
- *         description: Plano não encontrado
- *       500:
- *         description: Erro interno do servidor
+ *       400:
+ *         description: Dados inválidos
  */
-PlanosRouter.put('/:id', async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        const plano = req.body;
-        const planoAtualizado = await planoRepository.update(Number(id), plano);
-        if (planoAtualizado) {
-            res.json(planoAtualizado);
-        } else {
-            res.status(404).json({ error: 'Plano não encontrado' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: 'Erro interno do servidor' });
-    }
-});
+PlanosRouter.put('/', 
+    /*authorization('Administrador'),*/
+    queryParamConversion({id: 'int'}),
+    safeQueryParser(idSchema), 
+    safeBodyParser(PlanoSchema.partial()), 
+    controller.update)
 
 /**
  * @swagger
- * /planos/{id}:
+ * /planos:
  *   delete:
- *     summary: Deleta um plano pelo ID
+ *     summary: SoftDelete de um plano
  *     tags: [Planos]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
- *       - in: path
+ *       - in: query
  *         name: id
- *         required: true
  *         schema:
  *           type: integer
- *         description: ID do plano
+ *         description: O id do plano a ser retornado
+ *         required: true
  *     responses:
- *       200:
- *         description: Plano deletado com sucesso
+ *       201:
+ *         description: Plano (soft)deletado com sucesso
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Plano'
- *       404:
- *         description: Plano não encontrado
- *       500:
- *         description: Erro interno do servidor
+ *       400:
+ *         description: Dados inválidos
  */
-PlanosRouter.delete('/:id', async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        const planoDeletado = await planoRepository.delete(Number(id));
-        if (planoDeletado) {
-            res.json(planoDeletado);
-        } else {
-            res.status(404).json({ error: 'Plano não encontrado' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: 'Erro interno do servidor' });
-    }
-});
+PlanosRouter.delete('/',
+    queryParamConversion({id: 'int'}),
+    safeQueryParser(idSchema),
+    controller.Delete
+)
 
 export default PlanosRouter;
