@@ -22,7 +22,7 @@ const options: swaggerJsdoc.Options = {
       }
     }
   },
-  apis: ['./dist/routes/*.js'], // Caminho para os arquivos de rota
+  apis: ['./src/**/*.ts'], // Caminho para os arquivos de rota
 };
 
 const specs = swaggerJsdoc(options)

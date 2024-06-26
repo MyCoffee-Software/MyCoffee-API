@@ -5,6 +5,7 @@ import * as dotenv from 'dotenv';
 import cors from 'cors';
 import {PrismaClient} from '@prisma/client'
 import prisma from "./db";
+import cors from 'cors';
 
 dotenv.config();
 const PORT = process.env.API_PORT

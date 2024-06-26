@@ -7,10 +7,13 @@ export interface Usuario {
     imagem: string
 }
 
-export function isUsuario(object: unknown): object is Usuario{
-    if (typeof object == 'object' && object !== null){
-        return Object.keys(object)
-            .every((key) => ['id', 'nomeCompleto', 'email', 'senha', 'excluido', 'imagem'].includes(key))
-    }
-    return false
+export function isUsuario(obj: any): obj is Usuario {
+    return typeof obj === 'object' &&
+        obj !== null &&
+        typeof obj.id === 'bigint' &&
+        typeof obj.nomeCompleto === 'string' &&
+        typeof obj.email === 'string' &&
+        typeof obj.senha === 'string' &&
+        typeof obj.excluido === 'boolean' &&
+        typeof obj.imagem === 'string';
 }
