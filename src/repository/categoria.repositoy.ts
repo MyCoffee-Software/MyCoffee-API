@@ -100,8 +100,25 @@ async function update(categoria: Partial<Categoria>, idCategoria: number) {
     }
 }
 
-async function deleteCategoria(id: number) {
-    return prisma.categoria.delete({ where: { idCategoria: id } });
+async function Delete(idCategoria: number): Promise<Categoria> {
+    const queryResult = await prisma.categoria.update({
+        data: {
+            excluidoCategoria: true
+        },
+        where: {
+            idCategoria: idCategoria
+        }
+    })
+
+    if (queryResult != undefined) {
+        const categoria: Categoria = {
+            id: Number(queryResult.idCategoria),
+            nome: queryResult.nomeCategoria,
+            excluido: queryResult.excluidoCategoria
+        }
+
+        return categoria;
+    }
 }
 
-export default {getByProduto, getAll, getById, create, update, deleteCategoria}
+export default {getByProduto, getAll, getById, create, update, Delete}

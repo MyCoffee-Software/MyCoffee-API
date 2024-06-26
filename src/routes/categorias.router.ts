@@ -75,14 +75,13 @@ CategoriasRouter.post('/', safeBodyParser(CategoriaSchema), controller.create);
 
 /**
  * @swagger
- * /categorias/{id}:
+ * /categorias:
  *   put:
  *     summary: Atualiza uma categoria existente
  *     tags: [Categorias]
  *     parameters:
  *       - in: query
  *         name: id
- *         required: true
  *         schema:
  *           type: number
  *         description: ID da categoria
@@ -93,14 +92,14 @@ CategoriasRouter.post('/', safeBodyParser(CategoriaSchema), controller.create);
  *           schema:
  *             $ref: '#/components/schemas/Categoria'
  *     responses:
- *       200:
+ *       201:
  *         description: Categoria atualizado com sucesso
  *       404:
  *         description: Categoria não encontrado
  *       500:
  *         description: Erro interno do servidor
  */
-CategoriasRouter.put('/:id', 
+CategoriasRouter.put('/',
     queryParamConversion({ id: 'int' }), 
     safeQueryParser(idSchema), 
     safeBodyParser(CargoSchema.partial()), 
@@ -108,39 +107,33 @@ CategoriasRouter.put('/:id',
 
 /**
  * @swagger
- * /planos/{id}:
+ * /categorias:
  *   delete:
- *     summary: Deleta um plano pelo ID
- *     tags: [Planos]
+ *     summary: SoftDelete de ums categoria
+ *     tags: [Categorias]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
- *       - in: path
+ *       - in: query
  *         name: id
- *         required: true
  *         schema:
  *           type: integer
- *         description: ID do plano
+ *         description: O id da categoria a ser retornado
+ *         required: true
  *     responses:
- *       200:
- *         description: Plano deletado com sucesso
+ *       201:
+ *         description: Categoria (soft)deletado com sucesso
  *         content:
  *           application/json:
- *       404:
- *         description: Plano não encontrado
- *       500:
- *         description: Erro interno do servidor
+ *             schema:
+ *               $ref: '#/components/schemas/Categoria'
+ *       400:
+ *         description: Dados inválidos
  */
-CategoriasRouter.delete('/:id', async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        const categoriaDeletado = await categoriaRepository.deleteCategoria(Number(id));
-        if (categoriaDeletado) {
-            res.json(categoriaDeletado);
-        } else {
-            res.status(404).json({ error: 'Categoria não encontrado' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: 'Erro interno do servidor' });
-    }
-});
+CategoriasRouter.delete('/',
+    queryParamConversion({id: 'int'}),
+    safeQueryParser(idSchema),
+    controller.Delete
+)
 
 export default CategoriasRouter;

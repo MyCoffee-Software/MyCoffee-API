@@ -57,4 +57,13 @@ async function update(req: Request, res: Response) {
     }
 }
 
-export default {get, create, update}
+async function Delete(req: Request, res: Response) {
+    const Query = req.newQuery
+    const resultado = await repository.categoria.Delete(Query.id)
+    
+    if (resultado != undefined){
+        res.status(200).json(resultado)    
+    }    
+}
+
+export default {get, create, update, Delete}
