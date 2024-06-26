@@ -6,8 +6,6 @@ import AuthController from '../controllers/auth.controller'
 function authorizationMiddleware(...permissoesRequeridas: Array<Permissao>){
     return async (req: Request, res: Response, next: NextFunction) => {
         const permissoesDadas = await AuthController.getPermissoes(req.user)
-
-        console.log(req.user, permissoesDadas)
         
         if (permissoesDadas.includes('Administrador')){
             return next()

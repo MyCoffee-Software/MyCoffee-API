@@ -3,7 +3,6 @@ import { Cargo } from "../models/cargo"
 import { Permissao, isPermissao, isPermissoes } from "../models/permissao"
 
 async function createMany(novasPermissoes: Permissao[], idCargo: number):  Promise<Permissao[]>{
-    console.log(novasPermissoes, idCargo)
     const queryResult = await prisma.permissaoCargo.createManyAndReturn({
         data: novasPermissoes.map((permissao) => {
             return {idCargo: idCargo, permissao: permissao}
@@ -35,14 +34,17 @@ async function getByCargo(cargo: Cargo): Promise<Permissao[]> {
     }
 }
 
-async function updateByCargo(cargo: Cargo): Promise <Permissao[]>{
-    if (isPermissoes(cargo.permissoes)){
+async function updateByCargo(cargo: Cargo, novasPermissoes: Permissao[]): Promise <Permissao[]>{
+    if (isPermissoes(novasPermissoes)){
         const queryResult = await prisma.permissaoCargo.deleteMany({
-            where: {idCargo: cargo.id}
+            where: {idCargo: cargo.id},
         })
-    
-        return await createMany(cargo.permissoes, cargo.id)
+
+        if (queryResult){
+            return await createMany(novasPermissoes, cargo.id)
+        }        
     }
+
 }
 
 export default {createMany, getByCargo, updateByCargo}

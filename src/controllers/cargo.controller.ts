@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, request } from "express";
 import { number, z } from 'zod';
 import repository from "../repository/repository";
 import { CargoSchema, isCargo } from "../models/cargo";
@@ -41,17 +41,13 @@ async function create(req: Request, res: Response) {
 
     const safeParse = CargoSchema.safeParse(req.body)
 
-    if (!safeParse.success){
-        res.status(400).json(safeParse.error.errors)
-    } else {
-        const result = await repository.cargo.create(safeParse.data)
-        console.log(result)
-        if (result) {
-            result.permissoes = await repository.permissoesCargo.createMany(['Funcionario', ...novoCargo.permissoes], result.id)
-        }
-        
-        return res.status(200).json(result)
+    const resultado = await repository.cargo.create(safeParse.data)
+    if (resultado) {
+        resultado.permissoes = await repository.permissoesCargo.createMany(novoCargo.permissoes, resultado.id)
     }
+    
+    return res.status(200).json(resultado)
+
 }
 
 async function update(req: Request, res: Response) {
@@ -60,9 +56,21 @@ async function update(req: Request, res: Response) {
 
     const resultado = await repository.cargo.update(Body, Query.id)
     if (resultado != undefined){
-        resultado.permissoes = await repository.permissoesCargo.updateByCargo(Body)
+        resultado.permissoes = await repository.permissoesCargo.updateByCargo(resultado, Body.permissoes)
     }
 
     res.status(200).json(resultado)
 }
-export default {get, create, update}
+
+async function Delete(req: Request, res: Response) {
+    const Query = req.newQuery
+    console.log('!!!!!!!!!!!!')
+    const resultado = await repository.cargo.Delete(Query.id)
+    console.log(resultado)
+    if (resultado != undefined){
+        res.status(200).json(resultado)    
+    }    
+}
+
+
+export default {get, create, update, Delete}

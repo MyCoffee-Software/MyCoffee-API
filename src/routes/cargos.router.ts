@@ -39,7 +39,7 @@ const CargosRouter = Router();
  * 
  *     responses:
  *       '200':
- *         description: Produto criado com sucesso
+ *         description: Cargo(s) encontrado(s)
  *       '401':
  *         description: Não autorizado
  */
@@ -75,11 +75,73 @@ CargosRouter.post('/',
     safeBodyParser(CargoSchema),
     controller.create)
 
+/**
+ * @swagger
+ * /cargos:
+ *   put:
+ *     summary: Altera um cargo
+ *     tags: [Cargos]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         description: O id do cargo a ser retornado
+ *         required: true
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Cargo'
+ *     responses:
+ *       201:
+ *         description: Cargo alterado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Cargo'
+ *       400:
+ *         description: Dados inválidos
+ */
 CargosRouter.put('/', 
     authorization('Administrador'),
     queryParamConversion({id: 'int'}),
     safeQueryParser(idSchema), 
     safeBodyParser(CargoSchema.partial()), 
     controller.update)
+
+/**
+ * @swagger
+ * /cargos:
+ *   delete:
+ *     summary: SoftDelete de um cargo
+ *     tags: [Cargos]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         description: O id do cargo a ser retornado
+ *         required: true
+ *     responses:
+ *       201:
+ *         description: Cargo (soft)deletado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Cargo'
+ *       400:
+ *         description: Dados inválidos
+ */
+CargosRouter.delete('/',
+    queryParamConversion({id: 'int'}),
+    safeQueryParser(idSchema),
+    controller.Delete
+)
 
 export default CargosRouter;

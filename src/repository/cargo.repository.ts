@@ -1,3 +1,4 @@
+import { number } from "zod";
 import prisma from "../db";
 import { Cargo } from "../models/cargo";
 import { Funcionario } from "../models/funcionario";
@@ -74,7 +75,10 @@ async function create(novoCargo: Cargo): Promise<Cargo> {
 
 async function update(novoCargo: Partial<Cargo>, idCargo: number){
   const queryResult = await prisma.cargo.update({
-   data: novoCargo,
+   data: {
+    idCargo: novoCargo.id,
+    nome: novoCargo.nome,
+   },
    where: {idCargo, excluido: false} 
   })
 
@@ -89,4 +93,25 @@ async function update(novoCargo: Partial<Cargo>, idCargo: number){
   }
 }
 
-export default {getByFuncionario, getById, getAll, create, update}
+async function Delete(idCargo: number): Promise<Cargo>{
+  const queryResult = await prisma.cargo.update({
+    data: {
+      excluido: true
+    },
+    where: {
+      idCargo: idCargo
+    }
+  })
+
+  if (queryResult != undefined) {
+    const cargo: Cargo = {
+      id: Number(queryResult.idCargo),
+      nome: queryResult.nome,
+      excluido: queryResult.excluido
+    }
+
+    return cargo
+  }
+}
+
+export default {getByFuncionario, getById, getAll, create, update, Delete}
