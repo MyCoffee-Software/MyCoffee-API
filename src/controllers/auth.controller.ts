@@ -40,7 +40,7 @@ async function login(req: Request, res: Response) {
             {expiresIn: JWT_EXPIRATION}
         )
 
-        return res.status(200).json({token, payload})
+        return res.status(200).json({ token })
     }
 }
 
@@ -72,4 +72,14 @@ async function getPermissoes(usuario: Usuario): Promise<Permissao[]> {
     
 }
 
-export default {login, getPermissoes}
+async function getUser(req: Request, res: Response) {
+    const usuario = req.user as Usuario;
+
+    if (!usuario) {
+        return res.status(400).json({ error: 'Usuário não autenticado' });
+    }
+
+    return res.status(200).json({ usuario });
+}
+
+export default {login, getPermissoes, getUser}

@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import authController from "../controllers/auth.controller";
+import authenticationMiddleware from "../middleware/authenticationMiddleware";
 
 const UsuariosRouter = Router();
 
@@ -112,5 +113,28 @@ UsuariosRouter.post('')
  */
 
 
+/**
+ *  @swagger
+ *  /usuarios/perfil:
+ *    get:
+ *      summary: Informações do usuário
+ *      tags: [Usuarios]
+ *      description: Retorna informações do usuário recebendo um token
+ *      parameters:
+ *        - in: header
+ *          name: Authorization
+ *          required: true
+ *          schema:
+ *            type: string
+ *          description: Token JWT no formato 'Bearer {token}'
+ *      responses:
+ *        200:
+ *          description: Usuário
+ *        404:
+ *          description: Usuário inexistente para o token informado.
+ *        500:
+ *          description: Erro interno no servidor
+ */
+UsuariosRouter.get('/perfil', authenticationMiddleware, authController.getUser);
 
 export default UsuariosRouter;

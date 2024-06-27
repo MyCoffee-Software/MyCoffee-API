@@ -2,6 +2,7 @@ import express from "express";
 import swaggerRouter from "./swagger";
 import router from "./routes/router";
 import * as dotenv from 'dotenv';
+import cors from 'cors';
 import {PrismaClient} from '@prisma/client'
 import prisma from "./db";
 import cors from 'cors';
@@ -11,7 +12,12 @@ const PORT = process.env.API_PORT
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}
+
+app.use(cors(corsOptions))
 
 app.use(express.json())
 
