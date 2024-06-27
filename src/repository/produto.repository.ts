@@ -19,7 +19,7 @@ async function getById(id: number): Promise<Produto>{
             excluido: queryResult.excluido,
         }
 
-        produto.categorias = await Categorias.getByProduto(produto)
+        produto.categorias = await Categorias.getByProduto(Number(produto.id));
 
         return produto;
     }

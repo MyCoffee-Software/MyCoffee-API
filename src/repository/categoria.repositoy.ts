@@ -3,24 +3,27 @@ import prisma from "../db";
 import { Categoria } from "../models/categoria";
 import { Produto } from "../models/produto";
 
-async function getByProduto(produto: Produto){
-    /*
+async function getByProduto(produtoId: number): Promise<Categoria[]> {
     const queryResult = (await prisma.produtosCategoria.findMany({
-         where: {idProdutos: produto.id},
+         where: {idProdutos: produtoId},
          include: {categoria: true}
     }))
+    .map((r) => r.categoria)
+    .filter((p) => !p.excluidoCategoria)
+
 
     if (queryResult != undefined){
-        const categorias: Categoria[] = queryResult.map((c): Categoria => {
-            return {
-                id: c.idCategoria,
+        const categorias: Categoria[] = queryResult.map((c) => {
+            const categoria: Categoria = {
+                id: Number(c.idCategoria),
                 nome: c.nomeCategoria,
-                excluido: c.excluidoCategoria
+                excluido: c.excluidoCategoria,
             }
+            return categoria;
         })
 
         return categorias
-    }*/
+    }
 }
 
 async function getAll(paginacao: {pagina: number, limite: number}): Promise<Categoria[]> {

@@ -5,7 +5,6 @@ import * as dotenv from 'dotenv';
 import cors from 'cors';
 import {PrismaClient} from '@prisma/client'
 import prisma from "./db";
-import cors from 'cors';
 
 dotenv.config();
 const PORT = process.env.API_PORT
@@ -15,6 +14,7 @@ const app = express();
 const corsOptions = {
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }
 
 app.use(cors(corsOptions))
