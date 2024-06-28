@@ -1,5 +1,6 @@
 import prisma from "../db";
 import { Produto } from "../models/produto";
+import paginate from "../utils/paginate";
 import Categorias from "./categoria.repositoy";
 
 async function getById(id: number): Promise<Produto>{
@@ -9,7 +10,7 @@ async function getById(id: number): Promise<Produto>{
 
     if (queryResult != undefined){
         const produto: Produto = {
-            id: queryResult.idProduto,
+            id: Number(queryResult.idProduto),
             nome: queryResult.nomeProduto,
             descricao: queryResult.descricaoProduto,
             marca: queryResult.marca,
@@ -18,9 +19,6 @@ async function getById(id: number): Promise<Produto>{
             codigo_de_barras: queryResult.codigoDeBarras,
             excluido: queryResult.excluido,
         }
-
-        produto.categorias = await Categorias.getByProduto(Number(produto.id));
-
         return produto;
     }
 }
@@ -35,7 +33,7 @@ async function getAll(paginacao: {pagina: number, limite: number}): Promise<Prod
     if (queryResult != undefined){
         const produtos: Produto[] = queryResult.map((r) => {
             const produto: Produto = {
-                id: r.idProduto,
+                id: Number(r.idProduto),
                 nome: r.nomeProduto,
                 descricao: r.descricaoProduto,
                 marca: r.marca,
@@ -53,9 +51,44 @@ async function getAll(paginacao: {pagina: number, limite: number}): Promise<Prod
     }
 }
 
-async function getByCategoria(categoria: number, paginacao: {pagina: number, limite: number}): Promise<Produto[]>{
+async function getByTexto(paginacao: {pagina: number, limite: number}, texto: string): Promise<Produto[]> {    
+    const queryResult = await prisma.produto.findMany({
+    take: paginacao.limite, 
+    skip: paginacao.limite*(paginacao.pagina - 1),
+    where: {excluido: false,
+        OR: [
+            {descricaoProduto: {contains: texto}},
+            {nomeProduto: {contains: texto}},
+            {marca: {contains: texto}}
+        ]}
+    
+    })
+
+    if (queryResult != undefined){
+        const produtos: Produto[] = queryResult.map((r) => {
+            const produto: Produto = {
+                id: Number(r.idProduto),
+                nome: r.nomeProduto,
+                descricao: r.descricaoProduto,
+                marca: r.marca,
+                desconto_porcentual: r.descontoPorcentualProduto,
+                preco: r.preco,
+                codigo_de_barras: r.codigoDeBarras,
+                excluido: r.excluido,
+            }
+
+            return produto;
+    
+        })
+
+        return produtos
+    }
+    
+}
+
+async function getByCategoria(paginacao: {pagina: number, limite: number}, idCategoria: number): Promise<Produto[]>{
     const queryResult = (await prisma.produtosCategoria.findMany({
-        where: {idCategorias: categoria},
+        where: {idCategorias: idCategoria},
         include: {produto: true}
     }))
     .map((r) => r.produto)
@@ -64,7 +97,7 @@ async function getByCategoria(categoria: number, paginacao: {pagina: number, lim
     if (queryResult != undefined){
         const produtos: Produto[] = queryResult.map((r) => {
             const produto: Produto = {
-                id: r.idProduto,
+                id: Number(r.idProduto),
                 nome: r.nomeProduto,
                 descricao: r.descricaoProduto,
                 marca: r.marca,
@@ -77,8 +110,43 @@ async function getByCategoria(categoria: number, paginacao: {pagina: number, lim
             return produto;
         })
 
-        return produtos
+        return paginate(produtos, paginacao.pagina, paginacao.limite);
     }
+
+}
+
+async function getByCategoriaTexto(paginacao: {pagina: number, limite: number}, idCategoria: number, texto: string): Promise<Produto[]> {
+    const queryResult = (await prisma.produtosCategoria.findMany({
+        where: {idCategorias: idCategoria},
+        include: {produto: true}
+    }))
+    .map((r) => r.produto)
+    .filter((p) => !p.excluido)
+    .filter((p) => {
+        return (p.descricaoProduto.includes(texto) || p.nomeProduto.includes(texto) || p.marca.includes(texto))
+    })
+
+    if (queryResult != undefined){
+        const produtos: Produto[] = queryResult.map((r) => {
+            const produto: Produto = {
+                id: Number(r.idProduto),
+                nome: r.nomeProduto,
+                descricao: r.descricaoProduto,
+                marca: r.marca,
+                desconto_porcentual: r.descontoPorcentualProduto,
+                preco: r.preco,
+                codigo_de_barras: r.codigoDeBarras,
+                excluido: r.excluido,
+            }
+
+            return produto;
+        })
+
+        return paginate(produtos, paginacao.pagina, paginacao.limite);
+    }
+
+
+    
 }
 
 async function get(params: {texto?: string, categoria?: number}){
@@ -118,4 +186,4 @@ async function get(params: {texto?: string, categoria?: number}){
 }
 
 
-export default {getById, getAll, getByCategoria}
+export default {getById, getAll, getByCategoria, getByTexto, getByCategoriaTexto}

@@ -7,6 +7,7 @@ import Produto from "./produto.repository";
 import Categoria from "./categoria.repositoy";
 import PermissoesCargo from "./permissaoCargo.repository";
 import Plano from "./planos.repository";
+import produtoCategoria from "./produtoCategoria.repository";
 
 const repository = {
     usuario: Usuario,
@@ -17,6 +18,7 @@ const repository = {
     cliente: Cliente,
     produto: Produto,
     categoria: Categoria,
+    produtoCategoria: produtoCategoria,
     plano: Plano,
 }
 

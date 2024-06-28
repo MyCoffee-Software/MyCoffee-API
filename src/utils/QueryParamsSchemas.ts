@@ -12,3 +12,16 @@ export const idOuPaginacaoSchema = z.union([
     idSchema,
     paginacaoSchema,
 ])
+
+export const produtoGetQuerySchema = z.union([
+    idSchema,
+    z.object({
+        pagina: z.number(),
+        limite: z.number(),
+        categoria: z.number().optional(),
+        texto: z.string().optional()
+    })
+])
+
+
+

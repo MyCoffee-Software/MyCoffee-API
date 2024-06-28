@@ -4,6 +4,7 @@ import { z } from 'zod'
 export default (schema: z.ZodObject<any> | z.ZodUnion<any>) => {
     return (req: Request, res: Response, next: NextFunction) => {
         const Query = req.newQuery ? req.newQuery : req.query
+        console.log('aqui', Query);
 
         const safeParse = schema.safeParse(Query)
 

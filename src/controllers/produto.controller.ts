@@ -1,43 +1,53 @@
-import { Request, Response } from "express";
+import { Request, Response, query } from "express";
 import repository from "../repository/repository";
-import { Produto } from "../models/produto";
 
-async function GetProdutos(res: Response, req: Request) {
-    const id = Number(req.query.id)
-    const categoria = Number(req.query.categoria)
-    const texto = req.query.texto
-    const pagina = Number(req.query.pagina)
-    const limite = Number(req.query.limite)
+async function get(req: Request, res: Response ) {
+    const Query = req.newQuery
+    console.log(req.query, req.newQuery, req.user)
 
-    if (id != undefined && id > 0){
-        return res.status(200).send(await repository.produto.getById(id))
-    } 
+    if ('id' in Query) {
+        const result = await repository.produto.getById(Query.id)
+        if (result != undefined){
+            result.categorias = await repository.produtoCategoria.getByProduto(result)
+        }
 
-    if(pagina == undefined || limite == undefined){
-        return res.status(400).send({ error: "Parâmetros pagina e limite são obrigatórios" })
+        return res.status(200).json(result)
     }
 
-    let produtos: Produto[] = undefined
+    if ("pagina" in Query && 'limite' in Query){
+        if ("categoria" in Query) {
+            if ("texto" in Query){
+                console.log(1)
+                return res.status(200).json(await repository.produto.getByCategoriaTexto({
+                    pagina: Query.pagina,
+                    limite: Query.limite
+                }, Query.categoria, Query.texto))
+            } else {
+                console.log(2)
+                return res.status(200).json(await repository.produto.getByCategoria({
+                    pagina: Query.pagina,
+                    limite: Query.limite
+                }, Query.categoria))
+
+            }
+        } else {
+            if ("texto" in Query){
+                console.log(3)
+                return res.status(200).json(await repository.produto.getByTexto({
+                    pagina: Query.pagina,
+                    limite: Query.limite
+                },  Query.texto))
+            } else {
+                console.log(4, Query.texto)
+                return res.status(200).json(await repository.produto.getAll({
+                    pagina: Query.pagina,
+                    limite: Query.limite
+                }))
+            }
+
+        }
+    }
     
-    if (categoria != undefined){
-        produtos = await repository.produto.getByCategoria(categoria, {pagina, limite})
-    } else {
-        produtos = await repository.produto.getAll({pagina, limite})
-    }
-
-    if (texto != undefined){
-        produtos.filter((p) => {
-            return (
-                p.nome.includes(`${texto}`) ||
-                p.descricao.includes(`${texto}`) ||
-                p.marca.includes(`${texto}`)
-            )
-        })
-    }
 }
 
-export function CriarPedido(res: Response, req: Request) {
-    res.status(200).json({msg: 'função criar pedido'})
-}
-
-export default { GetProdutos } 
+export default { get } 

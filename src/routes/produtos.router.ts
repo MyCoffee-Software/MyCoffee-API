@@ -1,7 +1,10 @@
-import { Request, Response, Router } from "express";
-import { CriarPedido } from "../controllers/produto.controller";
+import { NextFunction, Request, Response, Router } from "express";
+import controller from "../controllers/produto.controller";
 import authorization from "../middleware/authorizationMiddleware";
 import { Permissao } from "../models/permissao";
+import queryParamConversion from "../middleware/queryParamConversion";
+import safeQueryParser from "../middleware/safeQueryParser";
+import { produtoGetQuerySchema } from "../utils/QueryParamsSchemas";
 
 const ProdutosRouter = Router();
 
@@ -9,35 +12,54 @@ const ProdutosRouter = Router();
  * @swagger
  * /produtos:
  *   get:
- *     summary: Lista produtos
- *     description: Retorna os produtos, de acordo com a parametrização
+ *     summary: Obtém um ou uma lista de produto
  *     tags: [Produtos]
  *     parameters:
- *     - in: path
- *       name: id
- *       description: Id do produto desejado
- *       required: false
- *       schema:
- *         type: number
- *     - in: path
- *       name: categoria
- *       description: Id da categoria desejada como filtro
- *       required: false
- *       schema:
- *         type: number
- *     - in: path
- *       name: text
- *       description: Texto relacionado desejado como filtro
- *       required: false
- *       schema:
- *         type: string
+ *       - in: query
+ *         name: limite
+ *         schema:
+ *           type: integer
+ *         description: A quantidade de itens a ser retornada
+ *         required: false
+ *       - in: query
+ *         name: pagina
+ *         schema:
+ *           type: integer
+ *         description: A página de itens a ser retornada
+ *         required: false
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         description: O id do produto a ser retornado
+ *         required: false
+ *       - in: query
+ *         name: categoria
+ *         schema:
+ *           type: integer
+ *         description: O id da categoria dos produtos a serem retornado
+ *         required: false
+ *       - in: query
+ *         name: texto
+ *         schema:
+ *           type: string
+ *         description: O texto relativo aos produtos a serem retornado
+ *         required: false
+ * 
  *     responses:
- *       200:
- *         description: Retorna uma lista de clientes
+ *       '200':
+ *         description: Produto(s) encontrado(s)
+ *       '401':
+ *         description: Não autorizado
  */
-ProdutosRouter.get('/', authorization(), (req: Request, res: Response) => {
-    res.send('Olá, você está na controladora Produtos')
-})
+ProdutosRouter.get('/', 
+    queryParamConversion({id: 'int', pagina: 'int', limite: "int", categoria: 'int', texto: "string"}),
+    safeQueryParser(produtoGetQuerySchema),
+    (req: Request, res: Response,  next: NextFunction) => {
+        console.log("->", req.query, req.newQuery, req.user)
+        next();
+    },
+    controller.get)
 
 /**
  * @swagger

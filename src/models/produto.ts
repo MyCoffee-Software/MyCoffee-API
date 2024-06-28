@@ -1,17 +1,20 @@
-import { Categoria, isCategoria } from "./categoria";
+import { Categoria, CategoriaSchema, isCategoria } from "./categoria";
+import { z } from "zod";
 
-export interface Produto {
-    id: bigint;
-    nome: string;
-    preco: number;
-    descricao: string;
-    desconto_porcentual: number;
-    codigo_de_barras: string;
-    marca: string;
-    excluido: boolean;
-    imagens?: string[]
-    categorias?: Categoria[]
-}
+const ProdutoSchema = z.object({
+    id: z.number().optional(),
+    nome: z.string(),
+    preco: z.number(),
+    descricao: z.string(),
+    desconto_porcentual: z.number(),
+    codigo_de_barras: z.string(),
+    marca: z.string(),
+    excluido: z.boolean().optional(),
+    imagens: z.array(z.string()).optional(),
+    categorias: z.array(CategoriaSchema).optional()
+});
+
+export type Produto = z.infer<typeof ProdutoSchema>
 
 export function isProduto(obj: any): obj is Produto {
     return typeof obj === 'object' &&

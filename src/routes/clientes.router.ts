@@ -10,23 +10,6 @@ import { clienteSchema } from "../models/cliente";
 const ClientesRouter = Router();
 
 /**
- *  @swagger
- *  /clientes:
- *  get:
- *    tags: [Clientes]
- * 
- *  post:
- *    tags: [Clientes]
- * 
- *  put:
- *    tags: [Clientes]
- * 
- *  delete:
- *    tags: [Clientes]
- * 
- */
-
-/**
  * @swagger
  * /clientes:
  *   get:

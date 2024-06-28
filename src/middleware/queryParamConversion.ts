@@ -24,6 +24,8 @@ export default (queryTypeMap: {[param: string ]:queryType }) => {
                         req.newQuery[param] = (number)
                         break;
                     case "string":
+                        let string = req.query[param]
+                        req.newQuery[param] = string
                         break;
                 }
             }
