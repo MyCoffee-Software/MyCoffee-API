@@ -9,10 +9,6 @@ import { z } from 'zod'
  *        - nomeCompleto
  *        - email
  *       properties:
- *         id:
- *           type: number
- *           description: ID do usuário
- *           example: 1
  *         nomeCompleto:
  *           type: string
  *           description: Nome completo do usuário
