@@ -18,10 +18,6 @@ import { z } from 'zod';
  *           type: string
  *           description: Telefone do cliente
  *           example: "67999998888"
- *         dataNascimento:
- *           type: string
- *           description: Data de nascimento do cliente
- *           example: "2012-01-09"
  *         endereco:
  *           type: string
  *           description: Endereço do cliente
@@ -36,7 +32,7 @@ export const clienteSchema = z.object({
     usuario: usuarioSchema,
     cpf: z.string(),
     telefone: z.string(),
-    data_nascimento: z.coerce.date(),
+    //data_nascimento: z.coerce.date(),
     endereco: z.string(),
     excluido: z.boolean().optional()
 });
@@ -44,5 +40,5 @@ export const clienteSchema = z.object({
 export type Cliente = z.infer<typeof clienteSchema>;
 
 export function isCliente(object: Usuario): object is Cliente{
-    return ['cpf', 'telefone', 'data_nascimento', 'endereco', 'clienteExcluido'].every((atributo) => atributo in object)
+    return ['cpf', 'telefone', /*'data_nascimento',*/ 'endereco', 'clienteExcluido'].every((atributo) => atributo in object)
 }
