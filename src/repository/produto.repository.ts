@@ -17,6 +17,7 @@ async function getById(id: number): Promise<Produto>{
             desconto_porcentual: queryResult.descontoPorcentualProduto,
             preco: queryResult.preco,
             codigo_de_barras: queryResult.codigoDeBarras,
+            imagens: queryResult.imagemProduto,
             excluido: queryResult.excluido,
         }
         return produto;
@@ -40,6 +41,7 @@ async function getAll(paginacao: {pagina: number, limite: number}): Promise<Prod
                 desconto_porcentual: r.descontoPorcentualProduto,
                 preco: r.preco,
                 codigo_de_barras: r.codigoDeBarras,
+                imagens: r.imagemProduto,
                 excluido: r.excluido,
             }
 
@@ -74,6 +76,7 @@ async function getByTexto(paginacao: {pagina: number, limite: number}, texto: st
                 desconto_porcentual: r.descontoPorcentualProduto,
                 preco: r.preco,
                 codigo_de_barras: r.codigoDeBarras,
+                imagens: r.imagemProduto,
                 excluido: r.excluido,
             }
 
@@ -104,6 +107,7 @@ async function getByCategoria(paginacao: {pagina: number, limite: number}, idCat
                 desconto_porcentual: r.descontoPorcentualProduto,
                 preco: r.preco,
                 codigo_de_barras: r.codigoDeBarras,
+                imagens: r.imagemProduto,
                 excluido: r.excluido,
             }
 
@@ -136,6 +140,7 @@ async function getByCategoriaTexto(paginacao: {pagina: number, limite: number}, 
                 desconto_porcentual: r.descontoPorcentualProduto,
                 preco: r.preco,
                 codigo_de_barras: r.codigoDeBarras,
+                imagens: r.imagemProduto,
                 excluido: r.excluido,
             }
 

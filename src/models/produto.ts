@@ -10,7 +10,7 @@ const ProdutoSchema = z.object({
     codigo_de_barras: z.string(),
     marca: z.string(),
     excluido: z.boolean().optional(),
-    imagens: z.array(z.string()).optional(),
+    imagens: z.string().optional(),
     categorias: z.array(CategoriaSchema).optional()
 });
 
