@@ -107,7 +107,6 @@ async function update(novoUsuario: Partial<Usuario>, idUsuario: number): Promise
     const data = {
         nome_completo: novoUsuario.nomeCompleto,
         email: novoUsuario.email,
-        senha: await bycript.hash(novoUsuario.senha, BYCRIPT_ROUNDS),
         imagem: novoUsuario.imagem,
         excluido: false
     }

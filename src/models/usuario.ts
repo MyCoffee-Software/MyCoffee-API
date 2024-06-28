@@ -17,10 +17,6 @@ import { z } from 'zod'
  *           type: string
  *           description: Email do usuário
  *           example: "joao.silva@example.com"
- *         senha:
- *           type: string
- *           description: Senha do usuário
- *           example: "senha123"
  *         imagem:
  *           type: string
  *           description: URL da imagem do usuário
