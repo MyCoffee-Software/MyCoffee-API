@@ -79,7 +79,13 @@ async function getUser(req: Request, res: Response) {
         return res.status(400).json({ error: 'Usuário não autenticado' });
     }
 
-    return res.status(200).json({ usuario });
+    try {
+        const permissoes = await getPermissoes(usuario);
+        return res.status(200).json({ usuario, permissoes });
+    } catch (e) {
+        console.error('Erro ao obter informações do usuário:', e);
+        return res.status(500).json({ error: 'Erro interno ao buscar informações do usuário' })
+    }
 }
 
 export default {login, getPermissoes, getUser}

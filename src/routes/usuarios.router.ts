@@ -120,13 +120,8 @@ UsuariosRouter.post('')
  *      summary: Informações do usuário
  *      tags: [Usuarios]
  *      description: Retorna informações do usuário recebendo um token
- *      parameters:
- *        - in: header
- *          name: Authorization
- *          required: true
- *          schema:
- *            type: string
- *          description: Token JWT no formato 'Bearer {token}'
+ *      security:
+ *       - BearerAuth: []
  *      responses:
  *        200:
  *          description: Usuário

@@ -139,7 +139,7 @@ FuncionariosRouter.put('/',
  * /funcionarios:
  *   delete:
  *     summary: SoftDelete de um funcionario
- *     tags: [Funcionario]
+ *     tags: [Funcionarios]
  *     security:
  *       - BearerAuth: []
  *     parameters:
