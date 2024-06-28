@@ -27,7 +27,7 @@ export const usuarioSchema = z.object({
     id: z.number().optional(),
     nomeCompleto: z.string(),
     email: z.string(),
-    senha: z.string(),
+    senha: z.string().optional(),
     excluido: z.boolean().optional(),
     imagem: z.string().optional()
 })
