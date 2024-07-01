@@ -46,6 +46,10 @@ model cliente {
   endereco                           String?
   telefone                           String?
   cpf                                String?
+  cep                                String?
+  estado                             String?
+  cidade                             String?
+  numero                             String?
   usuario_cliente_idClienteTousuario usuario   @relation("cliente_idClienteTousuario", fields: [idCliente], references: [id], onDelete: Cascade)
 }
 
