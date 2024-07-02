@@ -10,6 +10,10 @@ async function getByUsuario(usuario: Usuario): Promise<Cliente> {
             cpf: queryCliente.cpf,
             //data_nascimento: queryCliente.dataNascimento,
             endereco: queryCliente.endereco,
+            cep: queryCliente.cep,
+            estado: queryCliente.estado,
+            cidade: queryCliente.cidade,
+            numero: queryCliente.numero,
             telefone: queryCliente.telefone,
             excluido: queryCliente.excluido
         }
@@ -29,6 +33,10 @@ async function getById(id: number): Promise<Cliente> {
             endereco: queryCliente.endereco,
             //data_nascimento: queryCliente.dataNascimento,
             telefone: queryCliente.telefone,
+            cep: queryCliente.cep,
+            estado: queryCliente.estado,
+            cidade: queryCliente.cidade,
+            numero: queryCliente.numero,
             excluido: queryCliente.excluido,
         };
         return cliente;
@@ -50,6 +58,10 @@ async function getAll(paginacao: { pagina: number, limite: number }): Promise<Cl
                 endereco: r.endereco,
                 //data_nascimento: r.dataNascimento,
                 telefone: r.telefone,
+                cep: r.cep,
+                estado: r.estado,
+                cidade: r.cidade,
+                numero: r.numero,
                 excluido: r.excluido,
             };
             return cliente;
@@ -67,6 +79,10 @@ async function create(novoCliente: Cliente): Promise<Cliente>{
             endereco: novoCliente.endereco,
             //dataNascimento: novoCliente.data_nascimento,
             telefone: novoCliente.telefone,
+            cep: novoCliente.cep,
+            estado: novoCliente.estado,
+            cidade: novoCliente.cidade,
+            numero: novoCliente.numero,
             excluido: false
         }
     });
@@ -78,6 +94,10 @@ async function create(novoCliente: Cliente): Promise<Cliente>{
             endereco: queryResult.endereco,
             //data_nascimento: queryResult.dataNascimento,
             telefone: queryResult.telefone,
+            cep: queryResult.cep,
+            estado: queryResult.estado,
+            cidade: queryResult.cidade,
+            numero: queryResult.numero,
             excluido: queryResult.excluido,
         };
 
@@ -92,6 +112,11 @@ async function update(novoCliente: Cliente, idCliente: number): Promise<Cliente>
             endereco: novoCliente.endereco,
             //dataNascimento: novoCliente.data_nascimento,
             telefone: novoCliente.telefone,
+            cep: novoCliente.cep,
+            estado: novoCliente.estado,
+            cidade: novoCliente.cidade,
+            numero: novoCliente.numero,
+            
         },
         where: {
             idCliente, excluido: false
@@ -105,6 +130,10 @@ async function update(novoCliente: Cliente, idCliente: number): Promise<Cliente>
             endereco: queryResult.endereco,
             //data_nascimento: queryResult.dataNascimento,
             telefone: queryResult.telefone,
+            cep: queryResult.cep,
+            estado: queryResult.estado,
+            cidade: queryResult.cidade,
+            numero: queryResult.numero,
             excluido: queryResult.excluido,
         };
 
@@ -129,6 +158,10 @@ async function Delete(idCliente: number): Promise<Cliente> {
             endereco: queryResult.endereco,
             //data_nascimento: queryResult.dataNascimento,
             telefone: queryResult.telefone,
+            cep: queryResult.cep,
+            estado: queryResult.estado,
+            cidade: queryResult.cidade,
+            numero: queryResult.numero,
             excluido: queryResult.excluido,
         };
 
