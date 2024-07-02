@@ -7,10 +7,6 @@ import {z} from 'zod'
  *     ItemCarrinho:
  *       type: object
  *       properties:
- *         idCliente:
- *           type: number
- *           description: id do Cliente dono do carrinho
- *           example: 1
  *         idProduto:
  *           type: number
  *           description: id do Produto

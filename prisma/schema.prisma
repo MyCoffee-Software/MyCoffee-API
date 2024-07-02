@@ -52,6 +52,7 @@ model cliente {
   numero                             String?
   usuario_cliente_idClienteTousuario usuario        @relation("cliente_idClienteTousuario", fields: [idCliente], references: [id], onDelete: Cascade)
   itemCarrinho                       itemCarrinho[]
+  planoCarrinho                      planoCarrinho?
 }
 
 model compra {
@@ -94,7 +95,7 @@ model itemCompra {
 }
 
 model planoAssinatura {
-  idPlanoAssinatura     BigInt   @id @default(autoincrement())
+  idPlanoAssinatura     BigInt          @id @default(autoincrement())
   nomePlanoAssinatura   String
   descontoPorcentual    Float
   precoMensal           Float
@@ -102,7 +103,8 @@ model planoAssinatura {
   ativo                 Boolean
   descricao             String?
   excluido              Boolean?
-  imagemPlanoAssinatura String   @default("")
+  imagemPlanoAssinatura String          @default("")
+  planoCarrinho         planoCarrinho[]
 }
 
 model produto {
@@ -148,4 +150,14 @@ model produtosCategoria {
   idProdutoCategorias BigInt    @id @default(autoincrement())
   categoria           categoria @relation(fields: [idCategorias], references: [idCategoria], onDelete: Cascade)
   produto             produto   @relation(fields: [idProdutos], references: [idProduto], onDelete: Cascade)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model planoCarrinho {
+  idCliente       BigInt           @id @default(autoincrement())
+  periodo         String
+  idPlano         BigInt?
+  cliente         cliente          @relation(fields: [idCliente], references: [idCliente], onDelete: NoAction)
+  planoAssinatura planoAssinatura? @relation(fields: [idPlano], references: [idPlanoAssinatura], onDelete: NoAction)
 }

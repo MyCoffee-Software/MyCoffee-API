@@ -11,4 +11,17 @@ async function adicionarProduto(req: Request, res: Response){
   res.status(200).json({id: resultado})
 } 
 
-export default {adicionarProduto}
+async function adicionarPlano(req: Request, res: Response){
+  const User = req.user as Usuario
+  const Body = req.body
+
+  const existePlanoCarrinho = await repository.planoCarrinho.get(User.id)
+  if (existePlanoCarrinho) {
+    return res.status(409).json({error: 'Ja existe um plano no carrinho'})
+  }
+  
+  const resultado = await repository.planoCarrinho.addPlanoCarrinho(User.id, Body.idPlano, Body.periodo)
+
+  res.status(200).json({id: resultado})
+}
+export default {adicionarProduto, adicionarPlano}
