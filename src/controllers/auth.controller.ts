@@ -65,7 +65,6 @@ async function getPermissoes(usuario: Usuario): Promise<Permissao[]> {
     }
 
     const cliente = await repository.cliente.getByUsuario(usuario)
-    console.log("cliente", cliente)
     if (cliente !== undefined){
         return ['Cliente']
     }

@@ -10,17 +10,22 @@ function authorizationMiddleware(...permissoesRequeridas: Array<Permissao>){
         console.log('PERMISSÕES - ', permissoesDadas)
 
         if (permissoesDadas != undefined){
+            if (permissoesRequeridas.includes('Cliente')){
+                if (permissoesDadas.includes('Cliente')){
+                    return next()
+                }
+            } else {
+                if (permissoesDadas.includes('Administrador')){
+                    return next()
+                }
         
-            if (permissoesDadas.includes('Administrador')){
-                return next()
-            }
-    
-            if (permissoesRequeridas.every((permissao) => permissoesDadas.includes(permissao))){
-                return next()
+                if (permissoesRequeridas.every((permissao) => permissoesDadas.includes(permissao))){
+                    return next()
+                }
             }
         }
 
-        res.status(401).send({
+        return res.status(401).send({
             message: "Acesso negado."
         })
     }

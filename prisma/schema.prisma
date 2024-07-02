@@ -40,9 +40,9 @@ model categoria {
 }
 
 model cliente {
-  idCliente                          BigInt    @id @default(autoincrement())
+  idCliente                          BigInt         @id @default(autoincrement())
   excluido                           Boolean
-  dataNascimento                     DateTime? @db.Date
+  dataNascimento                     DateTime?      @db.Date
   endereco                           String?
   telefone                           String?
   cpf                                String?
@@ -50,7 +50,8 @@ model cliente {
   estado                             String?
   cidade                             String?
   numero                             String?
-  usuario_cliente_idClienteTousuario usuario   @relation("cliente_idClienteTousuario", fields: [idCliente], references: [id], onDelete: Cascade)
+  usuario_cliente_idClienteTousuario usuario        @relation("cliente_idClienteTousuario", fields: [idCliente], references: [id], onDelete: Cascade)
+  itemCarrinho                       itemCarrinho[]
 }
 
 model compra {
@@ -77,9 +78,13 @@ model funcionario {
 }
 
 model itemCarrinho {
-  valorUnitario Float   @id
-  quantidade    BigInt
-  excluido      Boolean
+  idCliente  BigInt
+  quantidade BigInt
+  idProduto  BigInt
+  cliente    cliente @relation(fields: [idCliente], references: [idCliente], onDelete: NoAction)
+  produto    produto @relation(fields: [idProduto], references: [idProduto], onDelete: NoAction)
+
+  @@id([idCliente, idProduto])
 }
 
 model itemCompra {
@@ -110,6 +115,7 @@ model produto {
   marca                     String
   excluido                  Boolean
   imagemProduto             String              @default("")
+  itemCarrinho              itemCarrinho[]
   produtosCategoria         produtosCategoria[]
 }
 
