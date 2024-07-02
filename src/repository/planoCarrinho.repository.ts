@@ -40,4 +40,22 @@ async function get(idCliente: number): Promise<PlanoCarrinho> {
       return planoCarrinho
   }
 }
-export default {addPlanoCarrinho, get}
+
+async function Delete(idCliente: number): Promise<PlanoCarrinho> {
+  const queryResult = await prisma.planoCarrinho.delete({
+    where: {
+      idCliente
+    }
+  })
+
+  if (queryResult != undefined) {
+    const planoCarrinho: PlanoCarrinho = {
+      idCliente: Number(queryResult.idCliente),
+      idPlano: Number(queryResult.idPlano),
+      periodo: queryResult.periodo as Periodo
+    }
+  
+      return planoCarrinho
+  }
+}
+export default {addPlanoCarrinho, get, Delete}

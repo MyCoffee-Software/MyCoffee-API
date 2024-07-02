@@ -19,9 +19,21 @@ async function adicionarPlano(req: Request, res: Response){
   if (existePlanoCarrinho) {
     return res.status(409).json({error: 'Ja existe um plano no carrinho'})
   }
-  
+
   const resultado = await repository.planoCarrinho.addPlanoCarrinho(User.id, Body.idPlano, Body.periodo)
 
-  res.status(200).json({id: resultado})
+  res.status(200).json(resultado)
 }
-export default {adicionarProduto, adicionarPlano}
+
+async function atualizarPlano(req: Request, res: Response){
+  
+  const User = req.user as Usuario
+  const Body = req.body
+
+  await repository.planoCarrinho.Delete(User.id)
+
+  const resultado = await repository.planoCarrinho.addPlanoCarrinho(User.id, Body.idPlano, Body.periodo)
+
+  res.status(200).json(resultado)
+}
+export default {adicionarProduto, adicionarPlano, atualizarPlano}

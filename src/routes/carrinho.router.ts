@@ -69,7 +69,7 @@ CarrinhoRouter.post('/produtos/',
  * @swagger
  * /carrinho/plano:
  *   post:
- *     summary: Adiciona um plano de um produto no carrinho
+ *     summary: Adiciona um plano no carrinho
  *     tags: [Carrinho]
  *     security:
  *       - BearerAuth: []
@@ -93,6 +93,34 @@ CarrinhoRouter.post('/plano/',
     authorization('Cliente'),
     safeBodyParser(PlanoCarrinhoSchema),
     controller.adicionarPlano
+)
+
+/**
+ * @swagger
+ * /carrinho/plano:
+ *   put:
+ *     summary: Altera o plano no carrinho
+ *     tags: [Carrinho]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PlanoCarrinho'
+ *     responses:
+ *       201:
+ *         description: Plano alteradp com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PlanoCarrinho'
+ */
+CarrinhoRouter.put('/plano',
+    authorization('Cliente'),
+    safeBodyParser(PlanoCarrinhoSchema),
+    controller.atualizarPlano
 )
 
 export default CarrinhoRouter;
