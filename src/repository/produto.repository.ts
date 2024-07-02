@@ -1,7 +1,9 @@
 import prisma from "../db";
+import { Categoria, isCategoria } from "../models/categoria";
 import { Produto } from "../models/produto";
 import paginate from "../utils/paginate";
 import Categorias from "./categoria.repositoy";
+import produtoCategoriaRepository from "./produtoCategoria.repository";
 
 async function getById(id: number): Promise<Produto>{
     const queryResult = await prisma.produto.findUnique({
@@ -148,47 +150,108 @@ async function getByCategoriaTexto(paginacao: {pagina: number, limite: number}, 
         })
 
         return paginate(produtos, paginacao.pagina, paginacao.limite);
-    }
-
-
-    
+    }    
 }
 
-async function get(params: {texto?: string, categoria?: number}){
-    const filtros = []
-    if (params.texto != undefined) {
-        filtros.push({
-            OR: [
-                {nomeProduto: {contains: params.texto }},
-                {marca: {contains: params.texto }},
-                {descricaoProduto: {contains: params.texto }}
-            ]
-        })
-    }
-
-    if (params.categoria != undefined){
-        filtros.push({
-
-        })
-    }
-
-    const teste = prisma.produto.findMany({
-        where: {
+async function create(novoProduto: Produto): Promise<Produto> {
+    const queryResult = await prisma.produto.create({
+        data: {
+            nomeProduto: novoProduto.nome,
+            descricaoProduto: novoProduto.descricao,
+            marca: novoProduto.marca,
+            descontoPorcentualProduto: novoProduto.desconto_porcentual,
+            preco: novoProduto.preco,
+            codigoDeBarras: novoProduto.codigo_de_barras,
+            imagemProduto: novoProduto.imagens,
             produtosCategoria: {
-                some: {
-                    idCategorias: params.categoria
-                }
-            }
-        },
-        include: {
-            produtosCategoria: {
-                include: {
-                    categoria: true
-                }
-            }
+                create: novoProduto.categorias.map((categoria) => ({
+                    categoria: { connect: { idCategoria: categoria.id }}
+                }))
+            },
+            excluido: false
         }
     })
+
+    if (queryResult != undefined) {
+        const produto: Produto = {
+            id: Number(queryResult.idProduto),
+            nome: queryResult.nomeProduto,
+            descricao: queryResult.descricaoProduto,
+            marca: queryResult.marca,
+            desconto_porcentual: queryResult.descontoPorcentualProduto,
+            preco: queryResult.preco,
+            codigo_de_barras: queryResult.codigoDeBarras,
+            imagens: queryResult.imagemProduto,
+            excluido: queryResult.excluido,
+        }
+
+        return produto;
+    }
 }
 
+async function update(novoProduto: Produto, idProduto: number): Promise<Produto> {
+    const queryResult = await prisma.produto.update({
+        data: {
+            nomeProduto: novoProduto.nome,
+            descricaoProduto: novoProduto.descricao,
+            marca: novoProduto.marca,
+            descontoPorcentualProduto: novoProduto.desconto_porcentual,
+            preco: novoProduto.preco,
+            codigoDeBarras: novoProduto.codigo_de_barras,
+            imagemProduto: novoProduto.imagens,
+            produtosCategoria: {
+                create: novoProduto.categorias.map((categoria) => ({
+                    categoria: { connect: { idCategoria: categoria.id }}
+                }))
+            }
+        },
+        where: {
+            idProduto, excluido: false
+        }
+    })
 
-export default {getById, getAll, getByCategoria, getByTexto, getByCategoriaTexto}
+    if (queryResult != undefined) {
+        const produto: Produto = {
+            id: Number(queryResult.idProduto),
+            nome: queryResult.nomeProduto,
+            descricao: queryResult.descricaoProduto,
+            marca: queryResult.marca,
+            desconto_porcentual: queryResult.descontoPorcentualProduto,
+            preco: queryResult.preco,
+            codigo_de_barras: queryResult.codigoDeBarras,
+            imagens: queryResult.imagemProduto,
+            excluido: queryResult.excluido,
+        }
+
+        return produto;
+    }
+}
+
+async function Delete(idProduto: number): Promise<Produto> {
+    const queryResult = await prisma.produto.update({
+        data: {
+            excluido: true
+        },
+        where: {
+            idProduto
+        }
+    })
+
+    if (queryResult != undefined) {
+        const produto: Produto = {
+            id: Number(queryResult.idProduto),
+            nome: queryResult.nomeProduto,
+            descricao: queryResult.descricaoProduto,
+            marca: queryResult.marca,
+            desconto_porcentual: queryResult.descontoPorcentualProduto,
+            preco: queryResult.preco,
+            codigo_de_barras: queryResult.codigoDeBarras,
+            imagens: queryResult.imagemProduto,
+            excluido: queryResult.excluido,
+        }
+
+        return produto;
+    }
+}
+
+export default {getById, getAll, getByCategoria, getByTexto, getByCategoriaTexto, create, update, Delete }

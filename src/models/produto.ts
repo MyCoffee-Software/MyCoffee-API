@@ -1,7 +1,39 @@
 import { Categoria, CategoriaSchema, isCategoria } from "./categoria";
 import { z } from "zod";
 
-const ProdutoSchema = z.object({
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Produto:
+ *       type: object
+ *       properties:
+ *         nome:
+ *           type: string
+ *           description: Nome do Produto
+ *           example: "café amargo"
+ *         preco:
+ *           type: number
+ *           description: Preço do produto
+ *           example: 20
+ *         descricao:
+ *           type: string
+ *           description: Descrição do produto
+ *           example: "Um café bem amargo"
+ *         desconto_porcentual:
+ *           type: number
+ *           description: Desconto do produto
+ *           example: 10
+ *         codigo_de_barras:
+ *           type: string
+ *           description: Codigo de barras de um produto
+ *         marca:
+ *           type: string
+ *           description: Marca do produto
+ *           example: 20
+ */
+
+export const ProdutoSchema = z.object({
     id: z.number().optional(),
     nome: z.string(),
     preco: z.number(),

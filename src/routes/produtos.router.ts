@@ -5,6 +5,8 @@ import { Permissao } from "../models/permissao";
 import queryParamConversion from "../middleware/queryParamConversion";
 import safeQueryParser from "../middleware/safeQueryParser";
 import { produtoGetQuerySchema } from "../utils/QueryParamsSchemas";
+import safeBodyParser from "../middleware/safeBodyParser";
+import { ProdutoSchema } from "../models/produto";
 
 const ProdutosRouter = Router();
 
@@ -74,73 +76,90 @@ ProdutosRouter.get('/',
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *                 description: Nome do produto
- *               price:
- *                 type: number
- *                 description: Preço do produto
+ *             $ref: '#/components/schemas/Produto'
  *     responses:
- *       '200':
+ *       201:
  *         description: Produto criado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Produto'
  *       '401':
  *         description: Não autorizado
  */
-ProdutosRouter.post('/', authorization('Administrador'), (req: Request, res: Response) => {
-    res.send('Olá, você está na controladora Produtos (POST)')
-})
+ProdutosRouter.post('/',
+    authorization('Administrador'),
+    safeBodyParser(ProdutoSchema), 
+    controller.create)
 
 /**
  * @swagger
  * /produtos:
  *   put:
- *     summary: Atualiza um produto existente
+ *     summary: Altera um produto
  *     tags: [Produtos]
  *     security:
- *     - BearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
- *     - in: path
- *       name: id
- *       description: Id do produto a ser alterado
- *       required: true
- *       schema:
- *         type: number
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         description: O id do produto a ser alterado
+ *         required: true
  *     requestBody:
  *       required: true
- *       application/json:
- *         schema:
- *           type: object
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Produto'
  *     responses:
- *       '200':
- *         description: Produto atualizado com sucesso
- *       '401':
- *         description: Não autorizado
- *          
+ *       201:
+ *         description: Produto alterado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Produto'
+ *       400:
+ *         description: Dados inválidos
  */
+ProdutosRouter.put('/', 
+    authorization('Administrador'),
+    queryParamConversion({id: 'int'}),
+    safeQueryParser(produtoGetQuerySchema), 
+    safeBodyParser(ProdutoSchema), 
+    controller.update)
 
 /**
  * @swagger
  * /produtos:
  *   delete:
- *     summary: Deleta um produto existente
+ *     summary: SoftDelete de um produto
  *     tags: [Produtos]
  *     security:
- *     - BearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
- *     - in: path
- *       name: id
- *       description: Id do produto a ser deletado
- *       required: true
- *       schema:
- *         type: number
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         description: O id do produto a ser retornado
+ *         required: true
  *     responses:
- *       '200':
- *         description: Produto deletado com sucesso
- *       '401':
- *         description: Não autorizado
- *          
+ *       201:
+ *         description: Produto (soft)deletado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Produto'
+ *       400:
+ *         description: Dados inválidos
  */
+ProdutosRouter.delete('/',
+    authorization('Administrador'),
+    queryParamConversion({id: 'int'}),
+    safeQueryParser(produtoGetQuerySchema),
+    controller.Delete
+)
 
 export default ProdutosRouter;

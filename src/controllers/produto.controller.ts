@@ -1,5 +1,6 @@
 import { Request, Response, query } from "express";
 import repository from "../repository/repository";
+import { ProdutoSchema } from "../models/produto";
 
 async function get(req: Request, res: Response ) {
     const Query = req.newQuery
@@ -50,4 +51,36 @@ async function get(req: Request, res: Response ) {
     
 }
 
-export default { get } 
+async function create(req: Request, res: Response) {
+    const safeParse = ProdutoSchema.safeParse(req.body);
+
+    if (!safeParse.success) {
+        res.status(400).json(safeParse.error.errors);
+    } else {
+        const result = await repository.produto.create(safeParse.data);
+        return res.status(200).json(result);
+    }
+}
+
+async function update(req: Request, res: Response) {
+    const query = req.newQuery
+    const safeParse = ProdutoSchema.safeParse(req.body);
+
+    if (!safeParse.success) {
+        res.status(400).json(safeParse.error.errors);
+    } else {
+        const result = await repository.produto.update(safeParse.data, query.id);
+        res.status(200).json(result);
+    }
+}
+
+async function Delete(req: Request, res: Response) {
+    const Query = req.newQuery
+    const resultado = await repository.produto.Delete(Query.id)
+    
+    if (resultado != undefined){
+        res.status(200).json(resultado)    
+    }    
+}
+
+export default { get, create, update, Delete } 
