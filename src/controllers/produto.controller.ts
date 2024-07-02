@@ -74,4 +74,12 @@ async function Delete(req: Request, res: Response) {
  
 }
 
-export default { get, create, update, Delete } 
+async function updateCategorias(req: Request, res: Response) {
+    const Query = req.newQuery
+    const Body = req.body
+    const result = await repository.produtoCategoria.createMany(Body, Query.id)
+
+    res.status(200).json(result)
+}
+
+export default { get, create, update, Delete, updateCategorias } 

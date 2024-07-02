@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response, Router } from "express";
 import controller from "../controllers/produto.controller";
 import authorization from "../middleware/authorizationMiddleware";
-import { Permissao } from "../models/permissao";
 import queryParamConversion from "../middleware/queryParamConversion";
 import safeQueryParser from "../middleware/safeQueryParser";
-import { produtoGetQuerySchema } from "../utils/QueryParamsSchemas";
+import { idArraySchema, idSchema, produtoGetQuerySchema } from "../utils/QueryParamsSchemas";
 import safeBodyParser from "../middleware/safeBodyParser";
 import { ProdutoSchema } from "../models/produto";
 
@@ -124,11 +123,53 @@ ProdutosRouter.post('/',
  *         description: Dados inválidos
  */
 ProdutosRouter.put('/', 
-    authorization('Administrador'),
+    authorization('Gerenciar Produto'),
     queryParamConversion({id: 'int'}),
-    safeQueryParser(produtoGetQuerySchema), 
+    safeQueryParser(idSchema), 
     safeBodyParser(ProdutoSchema), 
     controller.update)
+
+/**
+ * @swagger
+ * /produtos/categorias:
+ *   put:
+ *     summary: Atualiza as categorias de um produto
+ *     tags: [Produtos]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         description: O id do produto a ser alterado
+ *         required: true
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: integer
+ *             example: [1, 2, 3, 4]
+ *     responses:
+ *       201:
+ *         description: Produto alterado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Produto'
+ *       400:
+ *         description: Dados inválidos
+ */
+ProdutosRouter.put('/categorias',
+    authorization('Gerenciar Produto'),
+    queryParamConversion({id: 'int'}),
+    safeQueryParser(idSchema), 
+    safeBodyParser(idArraySchema), 
+    controller.updateCategorias
+)
 
 /**
  * @swagger

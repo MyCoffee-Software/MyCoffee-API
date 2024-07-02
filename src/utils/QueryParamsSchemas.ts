@@ -3,6 +3,8 @@ export const idSchema = z.object({
     id: z.number()
 })
 
+export const idArraySchema = z.array(z.number())
+
 export const paginacaoSchema = z.object({
     pagina: z.number(),
     limite: z.number()

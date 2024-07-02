@@ -49,9 +49,13 @@ async function getAll(paginacao: {pagina: number, limite: number}): Promise<Cate
 }
 
 async function getById(id: number): Promise<Categoria> {
+    console.log(id)
     const queryResult = await prisma.categoria.findUnique({
         where: { idCategoria: id }
     })
+
+    
+    console.log(queryResult)
 
     if (queryResult != undefined && !queryResult.excluidoCategoria) {
         const categoria: Categoria = {
