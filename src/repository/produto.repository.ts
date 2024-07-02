@@ -154,22 +154,19 @@ async function getByCategoriaTexto(paginacao: {pagina: number, limite: number}, 
 }
 
 async function create(novoProduto: Produto): Promise<Produto> {
+    const data = {
+        nomeProduto: novoProduto.nome,
+        descricaoProduto: novoProduto.descricao,
+        marca: novoProduto.marca,
+        descontoPorcentualProduto: novoProduto.desconto_porcentual,
+        preco: novoProduto.preco,
+        codigoDeBarras: novoProduto.codigo_de_barras,
+        excluido: false
+    }
+
+    console.log(data)
     const queryResult = await prisma.produto.create({
-        data: {
-            nomeProduto: novoProduto.nome,
-            descricaoProduto: novoProduto.descricao,
-            marca: novoProduto.marca,
-            descontoPorcentualProduto: novoProduto.desconto_porcentual,
-            preco: novoProduto.preco,
-            codigoDeBarras: novoProduto.codigo_de_barras,
-            imagemProduto: novoProduto.imagens,
-            produtosCategoria: {
-                create: novoProduto.categorias.map((categoria) => ({
-                    categoria: { connect: { idCategoria: categoria.id }}
-                }))
-            },
-            excluido: false
-        }
+        data
     })
 
     if (queryResult != undefined) {
@@ -198,12 +195,6 @@ async function update(novoProduto: Produto, idProduto: number): Promise<Produto>
             descontoPorcentualProduto: novoProduto.desconto_porcentual,
             preco: novoProduto.preco,
             codigoDeBarras: novoProduto.codigo_de_barras,
-            imagemProduto: novoProduto.imagens,
-            produtosCategoria: {
-                create: novoProduto.categorias.map((categoria) => ({
-                    categoria: { connect: { idCategoria: categoria.id }}
-                }))
-            }
         },
         where: {
             idProduto, excluido: false
@@ -219,7 +210,6 @@ async function update(novoProduto: Produto, idProduto: number): Promise<Produto>
             desconto_porcentual: queryResult.descontoPorcentualProduto,
             preco: queryResult.preco,
             codigo_de_barras: queryResult.codigoDeBarras,
-            imagens: queryResult.imagemProduto,
             excluido: queryResult.excluido,
         }
 
@@ -246,7 +236,6 @@ async function Delete(idProduto: number): Promise<Produto> {
             desconto_porcentual: queryResult.descontoPorcentualProduto,
             preco: queryResult.preco,
             codigo_de_barras: queryResult.codigoDeBarras,
-            imagens: queryResult.imagemProduto,
             excluido: queryResult.excluido,
         }
 

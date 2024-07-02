@@ -88,7 +88,7 @@ ProdutosRouter.get('/',
  *         description: Não autorizado
  */
 ProdutosRouter.post('/',
-    authorization('Administrador'),
+    authorization('Gerenciar Produto'),
     safeBodyParser(ProdutoSchema), 
     controller.create)
 

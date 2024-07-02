@@ -52,35 +52,26 @@ async function get(req: Request, res: Response ) {
 }
 
 async function create(req: Request, res: Response) {
-    const safeParse = ProdutoSchema.safeParse(req.body);
+    const Body = req.body
+    const result = await repository.produto.create(Body);
+    return res.status(200).json(result);
 
-    if (!safeParse.success) {
-        res.status(400).json(safeParse.error.errors);
-    } else {
-        const result = await repository.produto.create(safeParse.data);
-        return res.status(200).json(result);
-    }
 }
 
 async function update(req: Request, res: Response) {
-    const query = req.newQuery
-    const safeParse = ProdutoSchema.safeParse(req.body);
+    const Query = req.newQuery
+    const Body = req.body
+    const result = await repository.produto.update(Body, Query.id);
+    res.status(200).json(result);
 
-    if (!safeParse.success) {
-        res.status(400).json(safeParse.error.errors);
-    } else {
-        const result = await repository.produto.update(safeParse.data, query.id);
-        res.status(200).json(result);
-    }
 }
 
 async function Delete(req: Request, res: Response) {
     const Query = req.newQuery
     const resultado = await repository.produto.Delete(Query.id)
     
-    if (resultado != undefined){
-        res.status(200).json(resultado)    
-    }    
+    res.status(200).json(resultado)    
+ 
 }
 
 export default { get, create, update, Delete } 
