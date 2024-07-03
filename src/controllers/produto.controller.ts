@@ -9,7 +9,7 @@ async function get(req: Request, res: Response ) {
     if ('id' in Query) {
         const result = await repository.produto.getById(Query.id)
         if (result != undefined){
-            result.categorias = await repository.produtoCategoria.getByProduto(result)
+            result.categorias = await repository.produtoCategoria.getByProduto(result.id)
         }
 
         return res.status(200).json(result)

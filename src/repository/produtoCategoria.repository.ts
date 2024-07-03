@@ -21,10 +21,10 @@ async function createMany(novasCategorias: number[], idProdutos: number): Promis
         return categorias
     }
 }
-async function getByProduto(produto: Produto): Promise <Categoria[]>{
+async function getByProduto(idProduto: number): Promise <Categoria[]>{
     const queryResult = await prisma.produtosCategoria.findMany({
         include: {categoria: true},
-        where: {idProdutos: produto.id}
+        where: {idProdutos: idProduto}
     })
 
     if (queryResult){

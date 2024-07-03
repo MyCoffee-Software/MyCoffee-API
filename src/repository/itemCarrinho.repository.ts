@@ -1,4 +1,46 @@
 import prisma from '../db'
+import { itemCarrinhoOutput } from '../models/carrinho'
+import repository from './repository'
+
+async function get(idCliente: number): Promise<itemCarrinhoOutput[]> {
+  const queryResult = await prisma.itemCarrinho.findMany({
+    where: {
+      idCliente
+    },
+    include: {
+      produto: true
+    }
+  })
+
+  if (queryResult != undefined) {
+    const itensCarrinho: itemCarrinhoOutput[] = await Promise.all(queryResult.map(async (r) => {
+      const itemCarrinho: itemCarrinhoOutput = {
+        idProduto: Number(r.produto.idProduto),
+        nome: r.produto.nomeProduto,
+        descricao: r.produto.descricaoProduto,
+        marca: r.produto.marca,
+        preco: r.produto.preco,
+        quantidade: Number(r.quantidade),
+        codigo_de_barras: r.produto.codigoDeBarras,
+        subTotal: 0,
+        total: 0,
+      }
+
+      itemCarrinho.categorias = await repository.produtoCategoria.getByProduto(itemCarrinho.idProduto)
+
+      itemCarrinho.descontos.produto = {
+        porcentual: r.produto.descontoPorcentualProduto,
+        real: itemCarrinho.preco * r.produto.descontoPorcentualProduto / 100
+      }
+
+      itemCarrinho.descontos.descontosTotais = itemCarrinho.descontos.produto.real + itemCarrinho.descontos.plano?.real
+
+      return itemCarrinho
+    }))
+
+    return itensCarrinho
+  }
+}
 
 async function addItemCarrinho(idCliente: number, idProduto: number, quantidade: number): Promise<{idProduto: number, quantidade: number}> {
   const queryResult = await prisma.itemCarrinho.findUnique({
@@ -59,4 +101,4 @@ async function addItemCarrinho(idCliente: number, idProduto: number, quantidade:
  }
 }
 
-export default {addItemCarrinho}
+export default {addItemCarrinho, get}

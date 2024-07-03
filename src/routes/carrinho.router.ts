@@ -8,31 +8,23 @@ import { PlanoCarrinhoSchema } from '../models/planoCarrinho';
 const CarrinhoRouter = Router();
 
 /**
- *  @swagger
- *  /carrinho:
- *  get:
- *    tags: [Carrinho]
- * 
- *  put:
- *    tags: [Carrinho]
+ * @swagger
+ * /carrinho:
+ *   get:
+ *     summary: Obtém detalhes do carrinho do usuário logado
+ *     tags: [Carrinho] 
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Detalhes do carrinho
+ *       '401':
+ *         description: Não autorizado
  */
-
-/**
- *  @swagger
- *  /carrinho/assinatura:
- *  get:
- *    tags: [Carrinho]
- * 
- *  post:
- *    tags: [Carrinho]
- * 
- *  put:
- *    tags: [Carrinho]
- */
-
-CarrinhoRouter.get('/', (req: Request, res: Response) => {
-    res.send('Olá, você está na controladora Carrinho')
-})
+CarrinhoRouter.get('/', 
+    authorization('Cliente'),
+    controller.get
+)
 
 /**
  * @swagger
