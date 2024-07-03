@@ -36,15 +36,15 @@ export type itemCarrinhoOutput = {
     codigo_de_barras: string,
     marca: string,
     imagens?: string,
-    categorias: Categoria[],
+    categorias?: Categoria[],
     quantidade: number,
     subTotal: number,
-    descontos:{
-        produto: {
+    descontos?:{
+        produto?: {
             porcentual: number,
             real: number
         },
-        plano: {
+        plano?: {
             porcentual: number,
             real: number
         },
