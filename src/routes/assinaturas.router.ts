@@ -4,27 +4,66 @@ import { AssinaturaSchema } from "../models/assinatura";
 import safeBodyParser from "../middleware/safeBodyParser";
 import controller from "../controllers/assinatura.controller";
 import { PeriodoSchema } from "../models/periodo";
+import safeQueryParser from "../middleware/safeQueryParser";
+import { idOuPaginacaoSchema, idSchema } from "../utils/QueryParamsSchemas";
+import queryParamConversion from "../middleware/queryParamConversion";
 
 const AssinaturasRouter = Router();
 
 /**
- *  @swagger
- *  /assinaturas:
- *  post:
- *    tags: [Assinaturas]
- * 
- *  put:
- *    tags: [Assinaturas]
- * 
- *  delete:
- *    tags: [Assinaturas]
- * 
+ * @swagger
+ * /assinaturas:
+ *   get:
+ *     summary: Lista a assinatura vigente do cliente logado
+ *     tags: [Assinaturas]
+ *     responses:
+ *       '200':
+ *         description: Assinatura encontrada
+ *       '401':
+ *         description: Não autorizado
  */
+AssinaturasRouter.get('/',
+    authorization("Cliente"),
+    controller.getSelf
+)
 
-
-AssinaturasRouter.get('/', (req: Request, res: Response) => {
-    res.send('Olá, você está na controladora Assinaturas')
-})
+/**
+ * @swagger
+ * /assinaturas/gerente:
+ *   get:
+ *     summary: Lista uma ou mais assinaturas
+ *     tags: [Assinaturas]
+ *     parameters:
+ *       - in: query
+ *         name: limite
+ *         schema:
+ *           type: integer
+ *         description: A quantidade de itens a ser retornada
+ *         required: false
+ *       - in: query
+ *         name: pagina
+ *         schema:
+ *           type: integer
+ *         description: A página de itens a ser retornada
+ *         required: false
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         description: O id da assinatura a ser retornado
+ *         required: false 
+ *     responses:
+ *       '200':
+ *         description: Assinatura(s) encontrada(s)
+ *       '401':
+ *         description: Não autorizado
+ */
+AssinaturasRouter.get('/gerente/',
+    authorization("Gerenciar Assinatura"),
+    queryParamConversion({id: 'int', pagina: 'int', limite: 'int'}),
+    safeQueryParser(idOuPaginacaoSchema),
+    controller.get
+)
 
 /**
  * @swagger
@@ -58,8 +97,8 @@ AssinaturasRouter.post('/',
 
 /**
  * @swagger
- * /assinaturas:
- *   put:
+ * /assinaturas/estender:
+ *   post:
  *     summary: Estende uma assinatura
  *     tags: [Assinaturas]
  *     security:
@@ -80,7 +119,7 @@ AssinaturasRouter.post('/',
  *       '401':
  *         description: Não autorizado
  */
-AssinaturasRouter.put('/',
+AssinaturasRouter.post('/estender/',
     authorization("Cliente"),
     safeBodyParser(PeriodoSchema),
     controller.estender
@@ -108,5 +147,38 @@ AssinaturasRouter.delete('/',
     authorization("Cliente"),
     controller.cancelar
 )
+
+
+/**
+ * @swagger
+ * /assinaturas/gerente:
+ *   put:
+ *     summary: Altera uma assinatura
+ *     tags: [Assinaturas]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Assinatura'
+ *     responses:
+ *       201:
+ *         description: Assinatura alterada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Assinatura'
+ *       '401':
+ *         description: Não autorizado
+ */
+AssinaturasRouter.put('/gerente/',
+    authorization("Gerenciar Assinatura"),
+    safeBodyParser(AssinaturaSchema),
+    controller.update
+)
+
+
 
 export default AssinaturasRouter;
