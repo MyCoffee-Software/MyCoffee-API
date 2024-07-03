@@ -86,4 +86,27 @@ AssinaturasRouter.put('/',
     controller.estender
 )
 
+/**
+ * @swagger
+ * /assinaturas:
+ *   delete:
+ *     summary: Cancela uma assinatura
+ *     tags: [Assinaturas]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       201:
+ *         description: Assinatura cancelada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Assinatura'
+ *       '401':
+ *         description: Não autorizado
+ */
+AssinaturasRouter.delete('/',
+    authorization("Cliente"),
+    controller.cancelar
+)
+
 export default AssinaturasRouter;

@@ -69,6 +69,25 @@ async function estender(extensao: Periodo, idCliente: number): Promise<Assinatur
     }
 }
 
+async function cancelar(idCliente: number) {
+    const assinaturaVigente = await getVigente(idCliente)
+    const idAssinatura = assinaturaVigente.idAssinatura
+
+    const dataFim = new Date(assinaturaVigente.dataFim)
+    dataFim.setDate(dataFim.getDate() - 1)
+
+    const queryResult = await prisma.assinatura.update({
+        where: {
+            idAssinatura
+        },
+        data: {
+            dataFim,
+            excluido: true
+        }
+    })
+    
+}
+
 async function getVigente(idCliente: number): Promise<Assinatura>{
     const result = await prisma.assinatura.findFirst({
         where: {
@@ -100,4 +119,4 @@ async function getVigente(idCliente: number): Promise<Assinatura>{
     }
 }
 
-export default { create, estender, getVigente }
+export default { create, estender, getVigente, cancelar }

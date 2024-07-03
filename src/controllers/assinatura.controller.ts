@@ -26,4 +26,14 @@ async function estender(req: Request, res: Response){
     }
 }
 
-export default {create, estender}
+async function cancelar(req: Request, res: Response){
+    const User = req.user as Usuario
+
+    const result = await repository.assinatura.cancelar(User.id)
+
+    if (result != undefined) {
+        res.status(200).json(result)
+    }
+}
+
+export default {create, estender, cancelar}
