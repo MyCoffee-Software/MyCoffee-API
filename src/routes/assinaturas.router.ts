@@ -16,6 +16,8 @@ const AssinaturasRouter = Router();
  *   get:
  *     summary: Lista a assinatura vigente do cliente logado
  *     tags: [Assinaturas]
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       '200':
  *         description: Assinatura encontrada
@@ -33,6 +35,8 @@ AssinaturasRouter.get('/',
  *   get:
  *     summary: Lista uma ou mais assinaturas
  *     tags: [Assinaturas]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: query
  *         name: limite
