@@ -36,6 +36,7 @@ model categoria {
   idCategoria       BigInt              @id @default(autoincrement())
   nomeCategoria     String
   excluidoCategoria Boolean
+  planoCategoria    planoCategoria[]
   produtosCategoria produtosCategoria[]
 }
 
@@ -95,7 +96,7 @@ model itemCompra {
 }
 
 model planoAssinatura {
-  idPlanoAssinatura     BigInt          @id @default(autoincrement())
+  idPlanoAssinatura     BigInt           @id @default(autoincrement())
   nomePlanoAssinatura   String
   descontoPorcentual    Float
   precoMensal           Float
@@ -103,8 +104,9 @@ model planoAssinatura {
   ativo                 Boolean
   descricao             String?
   excluido              Boolean?
-  imagemPlanoAssinatura String          @default("")
+  imagemPlanoAssinatura String           @default("")
   planoCarrinho         planoCarrinho[]
+  planoCategoria        planoCategoria[]
 }
 
 model produto {
@@ -160,4 +162,14 @@ model planoCarrinho {
   idPlano         BigInt?
   cliente         cliente          @relation(fields: [idCliente], references: [idCliente], onDelete: NoAction)
   planoAssinatura planoAssinatura? @relation(fields: [idPlano], references: [idPlanoAssinatura], onDelete: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model planoCategoria {
+  idPlano         BigInt          @default(autoincrement())
+  idCategoria     BigInt
+  categoria       categoria       @relation(fields: [idCategoria], references: [idCategoria], onDelete: NoAction)
+  planoAssinatura planoAssinatura @relation(fields: [idPlano], references: [idPlanoAssinatura], onDelete: NoAction)
+
+  @@id([idPlano, idCategoria])
 }

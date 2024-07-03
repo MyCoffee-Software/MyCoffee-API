@@ -10,6 +10,7 @@ import Plano from "./planos.repository";
 import produtoCategoria from "./produtoCategoria.repository";
 import itemCarrinho from "./itemCarrinho.repository";
 import planoCarrinho from './planoCarrinho.repository';
+import planoCategoria from "./planoCategoria.repository";
 
 const repository = {
     usuario: Usuario,
@@ -22,8 +23,10 @@ const repository = {
     categoria: Categoria,
     produtoCategoria: produtoCategoria,
     plano: Plano,
+    planoCategoria: planoCategoria,
     itemCarrinho: itemCarrinho,
     planoCarrinho: planoCarrinho
+
 }
 
 export default repository

@@ -5,7 +5,7 @@ import authorization from "../middleware/authorizationMiddleware";
 import safeBodyParser from "../middleware/safeBodyParser";
 import { PlanoSchema } from "../models/plano";
 import safeQueryParser from "../middleware/safeQueryParser";
-import { idSchema } from "../utils/QueryParamsSchemas";
+import { idArraySchema, idSchema } from "../utils/QueryParamsSchemas";
 
 const PlanosRouter = Router();
 
@@ -75,7 +75,7 @@ PlanosRouter.get('/', queryParamConversion({ id: "int", pagina: "int", limite: "
  *         description: Dados inválidos
  */
 PlanosRouter.post('/',
-    authorization('Administrador'),
+    authorization('Gerenciar Assinatura'),
     safeBodyParser(PlanoSchema), 
     controller.create)
 
@@ -111,7 +111,7 @@ PlanosRouter.post('/',
  *         description: Dados inválidos
  */
 PlanosRouter.put('/', 
-    authorization('Administrador'),
+    authorization('Gerenciar Assinatura'),
     queryParamConversion({id: 'int'}),
     safeQueryParser(idSchema), 
     safeBodyParser(PlanoSchema.partial()), 
@@ -143,10 +143,52 @@ PlanosRouter.put('/',
  *         description: Dados inválidos
  */
 PlanosRouter.delete('/',
-    authorization('Administrador'),
+    authorization('Gerenciar Assinatura'),
     queryParamConversion({id: 'int'}),
     safeQueryParser(idSchema),
     controller.Delete
+)
+
+/**
+ * @swagger
+ * /planos/categorias:
+ *   put:
+ *     summary: Atualiza as categorias que um plano contempla
+ *     tags: [Planos]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         description: O id do plano a ser alterado
+ *         required: true
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: integer
+ *             example: [1, 2, 3, 4]
+ *     responses:
+ *       201:
+ *         description: Plano alterado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Plano'
+ *       400:
+ *         description: Dados inválidos
+ */
+PlanosRouter.put('/categorias/',
+    authorization("Gerenciar Assinatura"),
+    queryParamConversion({id: "int"}),
+    safeQueryParser(idSchema),
+    safeBodyParser(idArraySchema),
+    controller.updateCategorias
 )
 
 export default PlanosRouter;

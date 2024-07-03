@@ -23,6 +23,9 @@ async function get(req: Request, res: Response) {
 
     if ('id' in safeParse.data) {
         const result = await repository.plano.getById(safeParse.data.id);
+        if (result != undefined){
+            result.categorias = await repository.planoCategoria.getByPlano(result.id)
+        }
         return res.status(200).json(result);
     }
 
@@ -66,5 +69,12 @@ async function Delete(req: Request, res: Response) {
     }    
 }
 
+async function updateCategorias(req: Request, res: Response){
+    const Query = req.newQuery
+    const Body = req.body
+    const result = await repository.planoCategoria.createMany(Body, Query.id)
 
-export default {get, create, update, Delete}
+    res.status(200).json(result)
+}
+
+export default {get, create, update, Delete, updateCategorias}

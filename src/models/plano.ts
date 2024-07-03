@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { CategoriaSchema } from './categoria';
 
 /**
  * @swagger
@@ -45,7 +46,8 @@ export const PlanoSchema = z.object({
     ativo: z.boolean(),
     descricao: z.string(),
     excluido: z.boolean().optional(),
-    imagem: z.string().default(" ")
+    imagem: z.string().default(" "),
+    categorias: z.array(CategoriaSchema).optional()
 })
 
 export type Plano = z.infer<typeof PlanoSchema>
