@@ -52,17 +52,21 @@ model cliente {
   cidade                             String?
   numero                             String?
   usuario_cliente_idClienteTousuario usuario        @relation("cliente_idClienteTousuario", fields: [idCliente], references: [id], onDelete: Cascade)
+  compra                             compra[]
   itemCarrinho                       itemCarrinho[]
   planoCarrinho                      planoCarrinho?
 }
 
 model compra {
-  idCompra        BigInt   @id @default(autoincrement())
+  idCompra        BigInt       @id @default(autoincrement())
   formaPagamento  String
-  dataPagamento   DateTime @db.Date
+  dataPagamento   DateTime     @db.Date
   cpfComprador    String
   enderecoEntrega String
   excluido        Boolean
+  idCliente       BigInt?
+  cliente         cliente?     @relation(fields: [idCliente], references: [idCliente], onDelete: NoAction)
+  itemCompra      itemCompra[]
 }
 
 model formatacao {
@@ -90,9 +94,14 @@ model itemCarrinho {
 }
 
 model itemCompra {
-  valorUnitarioItemCompra Float   @id
-  quantidade              BigInt
-  excluido                Boolean
+  idCompra   BigInt
+  idProduto  BigInt
+  valor      Float?
+  quantidade BigInt?
+  compra     compra  @relation(fields: [idCompra], references: [idCompra], onDelete: NoAction)
+  produto    produto @relation(fields: [idProduto], references: [idProduto], onDelete: NoAction)
+
+  @@id([idCompra, idProduto])
 }
 
 model planoAssinatura {
@@ -120,6 +129,7 @@ model produto {
   excluido                  Boolean
   imagemProduto             String              @default("")
   itemCarrinho              itemCarrinho[]
+  itemCompra                itemCompra[]
   produtosCategoria         produtosCategoria[]
 }
 

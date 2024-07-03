@@ -11,6 +11,8 @@ import produtoCategoria from "./produtoCategoria.repository";
 import itemCarrinho from "./itemCarrinho.repository";
 import planoCarrinho from './planoCarrinho.repository';
 import planoCategoria from "./planoCategoria.repository";
+import compra from "./compra.repository";
+import itemCompra from "./itemCompra.repository";
 
 const repository = {
     usuario: Usuario,
@@ -25,7 +27,9 @@ const repository = {
     plano: Plano,
     planoCategoria: planoCategoria,
     itemCarrinho: itemCarrinho,
-    planoCarrinho: planoCarrinho
+    planoCarrinho: planoCarrinho,
+    compra: compra,
+    itemCompra: itemCompra
 
 }
 
