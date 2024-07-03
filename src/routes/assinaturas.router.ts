@@ -1,4 +1,8 @@
 import { Request, Response, Router } from "express";
+import authorization from "../middleware/authorizationMiddleware";
+import { AssinaturaSchema } from "../models/assinatura";
+import safeBodyParser from "../middleware/safeBodyParser";
+import assinaturaController from "../controllers/assinatura.controller";
 
 const AssinaturasRouter = Router();
 
@@ -20,5 +24,35 @@ const AssinaturasRouter = Router();
 AssinaturasRouter.get('/', (req: Request, res: Response) => {
     res.send('Olá, você está na controladora Assinaturas')
 })
+
+/**
+ * @swagger
+ * /assinaturas:
+ *   post:
+ *     summary: Cria uma nova assinatura
+ *     tags: [Assinaturas]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Assinatura'
+ *     responses:
+ *       201:
+ *         description: Assinatura criada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Assinatura'
+ *       '401':
+ *         description: Não autorizado
+ */
+AssinaturasRouter.post('/',
+    authorization("Cliente"),
+    safeBodyParser(AssinaturaSchema),
+    assinaturaController.create
+)
 
 export default AssinaturasRouter;
