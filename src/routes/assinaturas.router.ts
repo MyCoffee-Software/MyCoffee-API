@@ -2,7 +2,8 @@ import { Request, Response, Router } from "express";
 import authorization from "../middleware/authorizationMiddleware";
 import { AssinaturaSchema } from "../models/assinatura";
 import safeBodyParser from "../middleware/safeBodyParser";
-import assinaturaController from "../controllers/assinatura.controller";
+import controller from "../controllers/assinatura.controller";
+import { PeriodoSchema } from "../models/periodo";
 
 const AssinaturasRouter = Router();
 
@@ -52,7 +53,37 @@ AssinaturasRouter.get('/', (req: Request, res: Response) => {
 AssinaturasRouter.post('/',
     authorization("Cliente"),
     safeBodyParser(AssinaturaSchema),
-    assinaturaController.create
+    controller.create
+)
+
+/**
+ * @swagger
+ * /assinaturas:
+ *   put:
+ *     summary: Estende uma assinatura
+ *     tags: [Assinaturas]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Periodo'
+ *     responses:
+ *       201:
+ *         description: Assinatura estendida com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Assinatura'
+ *       '401':
+ *         description: Não autorizado
+ */
+AssinaturasRouter.put('/',
+    authorization("Cliente"),
+    safeBodyParser(PeriodoSchema),
+    controller.estender
 )
 
 export default AssinaturasRouter;

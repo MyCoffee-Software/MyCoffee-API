@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Assinatura } from "../models/assinatura";
 import repository from "../repository/repository";
 import { Usuario } from "../models/usuario";
+import { Periodo } from "../models/periodo";
 
 async function create(req: Request, res: Response){
     const User = req.user as Usuario
@@ -14,4 +15,15 @@ async function create(req: Request, res: Response){
     }
 }
 
-export default {create}
+async function estender(req: Request, res: Response){
+    const User = req.user as Usuario
+    const Body = req.body as Periodo
+
+    const result = await repository.assinatura.estender(Body, User.id)
+
+    if(result != undefined){
+        res.status(200).json(result)
+    }
+}
+
+export default {create, estender}
