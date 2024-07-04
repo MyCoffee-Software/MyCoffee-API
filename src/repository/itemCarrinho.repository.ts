@@ -125,4 +125,12 @@ async function addItemCarrinho(idCliente: number, idProduto: number, quantidade:
  }
 }
 
-export default {addItemCarrinho, get}
+async function DeleteByUser(idCliente: number) {
+  await prisma.itemCarrinho.deleteMany({
+    where: {
+      idCliente
+    }
+  })
+}
+
+export default {addItemCarrinho, get, DeleteByUser}

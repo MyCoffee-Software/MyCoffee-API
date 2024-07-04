@@ -4,6 +4,7 @@ import safeBodyParser from '../middleware/safeBodyParser';
 import { itemCarrinhoSchema } from '../models/itemCarrinho';
 import controller from '../controllers/carrinho.controller';
 import { PlanoCarrinhoSchema } from '../models/planoCarrinho';
+import { z } from "zod";
 
 const CarrinhoRouter = Router();
 
@@ -24,6 +25,35 @@ const CarrinhoRouter = Router();
 CarrinhoRouter.get('/', 
     authorization('Cliente'),
     controller.get
+)
+
+
+/**
+ * @swagger
+ * /carrinho/produtos:
+ *   put:
+ *     summary: Altera os produtos no carrinho
+ *     tags: [Carrinho]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ListaItensCarrinho'
+ *     responses:
+ *       201:
+ *         description: Produtos alterado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ListaItensCarrinho'
+ */
+CarrinhoRouter.put('/produtos/',
+    authorization('Cliente'),
+    safeBodyParser(z.object({ itens: z.array(itemCarrinhoSchema)})),
+    controller.atualizarProduto
 )
 
 /**
@@ -103,7 +133,7 @@ CarrinhoRouter.post('/plano/',
  *             $ref: '#/components/schemas/PlanoCarrinho'
  *     responses:
  *       201:
- *         description: Plano alteradp com sucesso
+ *         description: Plano alterado com sucesso
  *         content:
  *           application/json:
  *             schema:
