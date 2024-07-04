@@ -26,6 +26,8 @@ async function get(idCliente: number): Promise<itemCarrinhoOutput[]> {
         total: 0,
       }
 
+      itemCarrinho.subTotal = itemCarrinho.preco * itemCarrinho.quantidade
+
       itemCarrinho.categorias = await repository.produtoCategoria.getByProduto(itemCarrinho.idProduto)
 
       itemCarrinho.descontos.produto = {
@@ -33,7 +35,27 @@ async function get(idCliente: number): Promise<itemCarrinhoOutput[]> {
         real: itemCarrinho.preco * r.produto.descontoPorcentualProduto / 100
       }
 
-      itemCarrinho.descontos.descontosTotais = itemCarrinho.descontos.produto.real + itemCarrinho.descontos.plano?.real
+      const assinaturaVigente = await repository.assinatura.getVigente(idCliente)
+      if (assinaturaVigente != undefined){
+        const categoriasContempladas = await repository.planoCategoria.getByPlano(assinaturaVigente.idPlano)
+        const idsCategoriasContempladas = categoriasContempladas.map((c) => c.id);
+        const idsCategoriasProduto = itemCarrinho.categorias.map((c) => c.id);
+        const idContemplado = idsCategoriasContempladas.find((id) => idsCategoriasProduto.includes);
+
+        if (idContemplado != undefined){
+          const plano = await repository.plano.getById(assinaturaVigente.idPlano)
+          itemCarrinho.descontos.plano = {
+            porcentual: plano.desconto,
+            real: itemCarrinho.preco * plano.desconto / 100
+          }
+        }
+        
+      }
+
+      const descontoRealPlano = itemCarrinho.descontos.plano.real? itemCarrinho.descontos.plano.real: 0
+      const descontoRealProduto = itemCarrinho.descontos.produto.real? itemCarrinho.descontos.produto.real: 0 
+
+      itemCarrinho.descontos.descontosTotais = descontoRealPlano + descontoRealProduto
 
       return itemCarrinho
     }))
