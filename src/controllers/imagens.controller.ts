@@ -19,10 +19,11 @@ async function addToProduto(req: Request, res: Response) {
             console.error(err)
             return res.status(500).json({ error: 'Erro ao salvar imagem' })
         }
-        res.status(200).json({ URL: `produtos/${nome}` })
+        
+        cleanTempFolder()
+        return res.status(200).json({ URL: `produtos/${nome}` })
     })
-
-    cleanTempFolder()
+    return
 }
 
 async function addToPlano(req: Request, res: Response) {
@@ -41,10 +42,11 @@ async function addToPlano(req: Request, res: Response) {
             console.error(err)
             return res.status(500).json({ error: 'Erro ao salvar imagem' })
         }
-        res.status(200).json({ URL: `planos/${nome}` })
+        
+        cleanTempFolder()
+        return res.status(200).json({ URL: `planos/${nome}` })
     })
-
-    cleanTempFolder()
+    return
 }
 
 async function addToUsuario(req: Request, res: Response) {
@@ -63,10 +65,12 @@ async function addToUsuario(req: Request, res: Response) {
             console.error(err)
             return res.status(500).json({ error: 'Erro ao salvar imagem' })
         }
-        res.status(200).json({ URL: `usuarios/${nome}` })
+        
+        cleanTempFolder()
+        return res.status(200).json({ URL: `usuarios/${nome}` })
     })
+    return
 
-    cleanTempFolder()
 }
 
 async function get(req: Request, res: Response) {
@@ -94,7 +98,10 @@ async function get(req: Request, res: Response) {
                 res.status(500).send('Erro ao obter a imagem.');
             }
         });
+
+        
     });
+    return 
 }
 
 export default { addToPlano, addToProduto, addToUsuario, get }
