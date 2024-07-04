@@ -13,6 +13,7 @@ import Planos from "./planos.router";
 import Produtos from "./produtos.router";
 import Relatiorios from "./relatorios.router";
 import Usuarios from "./usuarios.router";
+import Sobre from "./sobre.router";
 
 const router = Router()
 
@@ -45,5 +46,6 @@ router.use('/planos', Planos)
 router.use('/produtos', Produtos)
 router.use('/relatorios', Relatiorios)
 router.use('/usuarios', Usuarios)
+router.use('/sobre', Sobre)
 
 export default router
