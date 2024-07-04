@@ -46,7 +46,7 @@ export const PlanoSchema = z.object({
     ativo: z.boolean(),
     descricao: z.string(),
     excluido: z.boolean().optional(),
-    imagem: z.string().default(" "),
+    imagens: z.array(z.string().default(" ")),
     categorias: z.array(CategoriaSchema).optional()
 })
 

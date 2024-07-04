@@ -9,7 +9,7 @@ async function getAll(paginacao: { pagina: number, limite: number }): Promise<Pl
     });
 
     if (queryPlanos.length > 0) {
-        const planos: Plano[] = queryPlanos.map((r) => {
+        const planos: Plano[] = await Promise.all(queryPlanos.map(async (r) => {
             const plano: Plano = {
                 id: Number(r.idPlanoAssinatura),
                 nome: r.nomePlanoAssinatura,
@@ -19,11 +19,14 @@ async function getAll(paginacao: { pagina: number, limite: number }): Promise<Pl
                 ativo: r.ativo,
                 descricao: r.descricao,
                 excluido: r.excluido,
-                imagem: r.imagemPlanoAssinatura
             }
 
+            plano.imagens = await prisma.imagensPlano.findMany({
+                where: { idPlano: plano.id }
+            }).then((r) => r.map((r) => r.caminho));
+
             return plano;
-        })
+        }))
 
         return planos;
     }
@@ -35,7 +38,7 @@ async function getById(id: number): Promise<Plano> {
     })
 
     if (queryResult != undefined && !queryResult.excluido) {
-        const categoria: Plano = {
+        const plano: Plano = {
             id: Number(queryResult.idPlanoAssinatura),
             nome: queryResult.nomePlanoAssinatura,
             desconto: Number(queryResult.descontoPorcentual),
@@ -44,9 +47,13 @@ async function getById(id: number): Promise<Plano> {
             ativo: queryResult.ativo,
             descricao: queryResult.descricao,
             excluido: queryResult.excluido,
-            imagem: queryResult.imagemPlanoAssinatura
         }
-        return categoria;
+
+        plano.imagens = await prisma.imagensPlano.findMany({
+            where: { idPlano: plano.id }
+        }).then((r) => r.map((r) => r.caminho));
+
+        return plano;
     }
 
     return null;
@@ -62,7 +69,6 @@ async function create(plano: Plano): Promise<Plano> {
             ativo: plano.ativo,
             descricao: plano.descricao,
             excluido: false,
-            imagemPlanoAssinatura: plano.imagem
         }
     })
 
@@ -76,8 +82,18 @@ async function create(plano: Plano): Promise<Plano> {
             ativo: queryResult.ativo,
             descricao: queryResult.descricao,
             excluido: queryResult.excluido,
-            imagem: queryResult.imagemPlanoAssinatura
         }
+
+        const promises = plano.imagens.map(async (i) => {
+            return await prisma.imagensPlano.create({
+                data: {
+                    caminho: i,
+                    idPlano: plano.id
+                }
+            })
+        })
+        const imagensPlano = await Promise.all(promises);
+        plano.imagens = imagensPlano.map((r) => r.caminho);
 
         return plano;
     }
@@ -92,7 +108,6 @@ async function update(plano: Partial<Plano>, idPlanoAssinatura: number) {
             precoAnual: plano.precoAnual,
             ativo: plano.ativo,
             descricao: plano.descricao,
-            imagemPlanoAssinatura: plano.imagem
         },
         where: { idPlanoAssinatura, excluido: false }
     });
@@ -107,8 +122,18 @@ async function update(plano: Partial<Plano>, idPlanoAssinatura: number) {
             ativo: queryResult.ativo,
             descricao: queryResult.descricao,
             excluido: queryResult.excluido,
-            imagem: queryResult.imagemPlanoAssinatura
         }
+
+        const promises = plano.imagens.map(async (i) => {
+            return await prisma.imagensPlano.create({
+                data: {
+                    caminho: i,
+                    idPlano: plano.id
+                }
+            })
+        })
+        const imagensPlano = await Promise.all(promises);
+        plano.imagens = imagensPlano.map((r) => r.caminho);
 
         return plano;
     }
@@ -134,7 +159,6 @@ async function Delete(idPlanoAssinatura: number): Promise<Plano> {
             ativo: queryResult.ativo,
             descricao: queryResult.descricao,
             excluido: queryResult.excluido,
-            imagem: queryResult.imagemPlanoAssinatura
         }
 
         return plano;
