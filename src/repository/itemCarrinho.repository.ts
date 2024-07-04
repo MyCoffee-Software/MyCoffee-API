@@ -57,6 +57,8 @@ async function get(idCliente: number): Promise<itemCarrinhoOutput[]> {
 
       itemCarrinho.descontos.descontosTotais = descontoRealPlano + descontoRealProduto
 
+      itemCarrinho.total = itemCarrinho.subTotal - itemCarrinho.descontos.descontosTotais
+
       return itemCarrinho
     }))
 
