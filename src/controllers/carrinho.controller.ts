@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Usuario } from '../models/usuario';
 import repository from '../repository/repository';
 import { Carrinho } from '../models/carrinho';
+import { ItemCarrinho } from '../models/itemCarrinho';
 
 async function get(req: Request, res: Response){
   const User = req.user as Usuario
@@ -26,6 +27,17 @@ async function adicionarProduto(req: Request, res: Response){
   res.status(200).json({id: resultado})
 } 
 
+async function atualizarProduto(req: Request, res: Response){
+  const User = req.user as Usuario
+  const Body = req.body as ItemCarrinho[]
+
+  await repository.itemCarrinho.DeleteByUser(User.id)
+
+  const resultado = await Promise.all(Body.map((i) => repository.itemCarrinho.addItemCarrinho(User.id, i.idProduto, i.quantidade)))
+
+  res.status(200).json(resultado)
+}
+
 async function adicionarPlano(req: Request, res: Response){
   const User = req.user as Usuario
   const Body = req.body
@@ -41,7 +53,6 @@ async function adicionarPlano(req: Request, res: Response){
 }
 
 async function atualizarPlano(req: Request, res: Response){
-  
   const User = req.user as Usuario
   const Body = req.body
 
@@ -51,4 +62,4 @@ async function atualizarPlano(req: Request, res: Response){
 
   res.status(200).json(resultado)
 }
-export default {adicionarProduto, adicionarPlano, atualizarPlano, get}
+export default {adicionarProduto, atualizarProduto, adicionarPlano, atualizarPlano, get}

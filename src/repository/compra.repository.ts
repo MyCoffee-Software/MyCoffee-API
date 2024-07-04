@@ -1,10 +1,10 @@
 import prisma from "../db";
 import { Compra } from "../models/compra";
 
-async function create(novaCompra: Compra): Promise<Compra> {
+async function create(novaCompra: Compra, idCliente: number): Promise<Compra> {
     const queryResult = await prisma.compra.create({
         data: {
-            idCliente: novaCompra.idCliente,
+            idCliente,
             cpfComprador: novaCompra.cpfComprador,
             dataPagamento: novaCompra.dataPagamento,
             formaPagamento: novaCompra.formaPagamento,

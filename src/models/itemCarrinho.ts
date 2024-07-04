@@ -15,6 +15,10 @@ import {z} from 'zod'
  *           type: number
  *           description: Quantidade do item
  *           example: 1
+ *     ListaItensCarrinho:
+ *       type: array
+ *       items:
+ *         $ref: '#/components/schemas/ItemCarrinho'
  */
 
 export const itemCarrinhoSchema = z.object({

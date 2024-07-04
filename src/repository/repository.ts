@@ -13,6 +13,7 @@ import planoCarrinho from './planoCarrinho.repository';
 import planoCategoria from "./planoCategoria.repository";
 import compra from "./compra.repository";
 import itemCompra from "./itemCompra.repository";
+import Assinatura from "./assinatura.repository";
 
 const repository = {
     usuario: Usuario,
@@ -26,6 +27,7 @@ const repository = {
     produtoCategoria: produtoCategoria,
     plano: Plano,
     planoCategoria: planoCategoria,
+    assinatura: Assinatura,
     itemCarrinho: itemCarrinho,
     planoCarrinho: planoCarrinho,
     compra: compra,

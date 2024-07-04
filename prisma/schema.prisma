@@ -14,14 +14,18 @@ model admin {
 }
 
 model assinatura {
-  idAssinatura    BigInt   @id @default(autoincrement())
+  idAssinatura    BigInt           @id @default(autoincrement())
   formaPagamento  String
   enderecoEntrega String
   cpfSignatario   String
-  dataInicio      DateTime @db.Date
-  dataFim         DateTime @db.Date
+  dataInicio      DateTime         @db.Date
+  dataFim         DateTime         @db.Date
   valor           Float
   excluido        Boolean
+  idCliente       BigInt?
+  idPlano         BigInt?
+  cliente         cliente?         @relation(fields: [idCliente], references: [idCliente], onDelete: NoAction)
+  planoAssinatura planoAssinatura? @relation(fields: [idPlano], references: [idPlanoAssinatura], onDelete: NoAction)
 }
 
 model cargo {
@@ -51,6 +55,7 @@ model cliente {
   estado                             String?
   cidade                             String?
   numero                             String?
+  assinatura                         assinatura[]
   usuario_cliente_idClienteTousuario usuario        @relation("cliente_idClienteTousuario", fields: [idCliente], references: [id], onDelete: Cascade)
   compra                             compra[]
   itemCarrinho                       itemCarrinho[]
@@ -114,6 +119,7 @@ model planoAssinatura {
   descricao             String?
   excluido              Boolean?
   imagemPlanoAssinatura String           @default("")
+  assinatura            assinatura[]
   planoCarrinho         planoCarrinho[]
   planoCategoria        planoCategoria[]
 }

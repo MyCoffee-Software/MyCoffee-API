@@ -81,7 +81,7 @@ export type PlanoCarrinhoOutput = {
     total: number
 }
 
-const CarrinhoSchema = z.object({
+export const CarrinhoSchema = z.object({
     produtos: z.array(itemCarrinhoSchema),
     plano: planoCarrinhoSchema,
     total: z.number()
