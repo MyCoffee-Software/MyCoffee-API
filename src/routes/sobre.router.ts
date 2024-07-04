@@ -4,7 +4,7 @@ import fs from 'fs';
 import authorizationMiddleware from "../middleware/authorizationMiddleware";
 
 const SobreRouter = Router();
-const filePath = path.join(__dirname, process.env.DESCRICOES_PATH);
+const filePath = path.join(__dirname, process.env.UPLOADS_PATH, process.env.SOBRE_PATH, process.env.SOBRE_FILE_NAME);
 
 SobreRouter.get('/', (req: Request, res: Response) => {
     fs.readFile(filePath, "utf8", (err, data) => {
