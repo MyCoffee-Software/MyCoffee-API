@@ -24,6 +24,17 @@ async function get(idCliente: number): Promise<itemCarrinhoOutput[]> {
         codigo_de_barras: r.produto.codigoDeBarras,
         subTotal: 0,
         total: 0,
+        descontos: {
+          produto: {
+            porcentual: r.produto.descontoPorcentualProduto,
+            real: r.produto.preco * r.produto.descontoPorcentualProduto / 100
+          },
+          plano: {
+            porcentual: 0,
+            real: 0
+          },
+          descontosTotais: 0
+        }
       }
 
       itemCarrinho.subTotal = itemCarrinho.preco * itemCarrinho.quantidade

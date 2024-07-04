@@ -52,7 +52,7 @@ CarrinhoRouter.get('/',
  */
 CarrinhoRouter.put('/produtos/',
     authorization('Cliente'),
-    safeBodyParser(z.object({ itens: z.array(itemCarrinhoSchema)})),
+    safeBodyParser(z.array(itemCarrinhoSchema)),
     controller.atualizarProduto
 )
 
