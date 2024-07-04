@@ -19,9 +19,13 @@ async function getById(id: number): Promise<Produto>{
             desconto_porcentual: queryResult.descontoPorcentualProduto,
             preco: queryResult.preco,
             codigo_de_barras: queryResult.codigoDeBarras,
-            imagens: queryResult.imagemProduto,
             excluido: queryResult.excluido,
         }
+
+        produto.imagens = (await prisma.imagensProduto.findMany({
+            where: {idProduto: id}
+        })).map((r) => r.caminho)
+
         return produto;
     }
 }
@@ -34,7 +38,7 @@ async function getAll(paginacao: {pagina: number, limite: number}): Promise<Prod
     })
 
     if (queryResult != undefined){
-        const produtos: Produto[] = queryResult.map((r) => {
+        const produtos: Produto[] = await Promise.all(queryResult.map(async (r) => {
             const produto: Produto = {
                 id: Number(r.idProduto),
                 nome: r.nomeProduto,
@@ -43,13 +47,16 @@ async function getAll(paginacao: {pagina: number, limite: number}): Promise<Prod
                 desconto_porcentual: r.descontoPorcentualProduto,
                 preco: r.preco,
                 codigo_de_barras: r.codigoDeBarras,
-                imagens: r.imagemProduto,
                 excluido: r.excluido,
             }
 
+            produto.imagens = (await prisma.imagensProduto.findMany({
+                where: {idProduto: produto.id}
+            })).map((r) => r.caminho)
+
             return produto;
         
-        })
+        }))
 
         return produtos
     }
@@ -69,7 +76,7 @@ async function getByTexto(paginacao: {pagina: number, limite: number}, texto: st
     })
 
     if (queryResult != undefined){
-        const produtos: Produto[] = queryResult.map((r) => {
+        const produtos: Produto[] = await Promise.all(queryResult.map( async(r) => {
             const produto: Produto = {
                 id: Number(r.idProduto),
                 nome: r.nomeProduto,
@@ -78,13 +85,16 @@ async function getByTexto(paginacao: {pagina: number, limite: number}, texto: st
                 desconto_porcentual: r.descontoPorcentualProduto,
                 preco: r.preco,
                 codigo_de_barras: r.codigoDeBarras,
-                imagens: r.imagemProduto,
                 excluido: r.excluido,
             }
 
+            produto.imagens = (await prisma.imagensProduto.findMany({
+                where: {idProduto: produto.id}
+            })).map((r) => r.caminho)
+
             return produto;
     
-        })
+        }))
 
         return produtos
     }
@@ -100,7 +110,7 @@ async function getByCategoria(paginacao: {pagina: number, limite: number}, idCat
     .filter((p) => !p.excluido)
 
     if (queryResult != undefined){
-        const produtos: Produto[] = queryResult.map((r) => {
+        const produtos: Produto[] = await Promise.all(queryResult.map(async (r) => {
             const produto: Produto = {
                 id: Number(r.idProduto),
                 nome: r.nomeProduto,
@@ -109,12 +119,15 @@ async function getByCategoria(paginacao: {pagina: number, limite: number}, idCat
                 desconto_porcentual: r.descontoPorcentualProduto,
                 preco: r.preco,
                 codigo_de_barras: r.codigoDeBarras,
-                imagens: r.imagemProduto,
                 excluido: r.excluido,
             }
 
+            produto.imagens = (await prisma.imagensProduto.findMany({
+                where: {idProduto: produto.id}
+            })).map((r) => r.caminho)
+
             return produto;
-        })
+        }))
 
         return paginate(produtos, paginacao.pagina, paginacao.limite);
     }
@@ -133,7 +146,7 @@ async function getByCategoriaTexto(paginacao: {pagina: number, limite: number}, 
     })
 
     if (queryResult != undefined){
-        const produtos: Produto[] = queryResult.map((r) => {
+        const produtos: Produto[] = await Promise.all(queryResult.map(async (r) => {
             const produto: Produto = {
                 id: Number(r.idProduto),
                 nome: r.nomeProduto,
@@ -142,12 +155,15 @@ async function getByCategoriaTexto(paginacao: {pagina: number, limite: number}, 
                 desconto_porcentual: r.descontoPorcentualProduto,
                 preco: r.preco,
                 codigo_de_barras: r.codigoDeBarras,
-                imagens: r.imagemProduto,
                 excluido: r.excluido,
             }
 
+            produto.imagens = (await prisma.imagensProduto.findMany({
+                where: {idProduto: produto.id}
+            })).map((r) => r.caminho)
+
             return produto;
-        })
+        }))
 
         return paginate(produtos, paginacao.pagina, paginacao.limite);
     }    
@@ -178,9 +194,20 @@ async function create(novoProduto: Produto): Promise<Produto> {
             desconto_porcentual: queryResult.descontoPorcentualProduto,
             preco: queryResult.preco,
             codigo_de_barras: queryResult.codigoDeBarras,
-            imagens: queryResult.imagemProduto,
             excluido: queryResult.excluido,
         }
+
+
+        const promises = novoProduto.imagens.map(async (i) => {
+            return await prisma.imagensProduto.create({
+                data: {
+                    idProduto: Number(queryResult.idProduto),
+                    caminho: i
+                }
+            })
+        })
+        const imagensProduto = await Promise.all(promises)
+        produto.imagens = imagensProduto.map((i) => i.caminho)
 
         return produto;
     }
@@ -212,6 +239,17 @@ async function update(novoProduto: Produto, idProduto: number): Promise<Produto>
             codigo_de_barras: queryResult.codigoDeBarras,
             excluido: queryResult.excluido,
         }
+
+        const promises = novoProduto.imagens.map(async (i) => {
+            return await prisma.imagensProduto.create({
+                data: {
+                    idProduto: Number(queryResult.idProduto),
+                    caminho: i
+                }
+            })
+        })
+        const imagensProduto = await Promise.all(promises)
+        produto.imagens = imagensProduto.map((i) => i.caminho)
 
         return produto;
     }

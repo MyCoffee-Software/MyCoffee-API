@@ -120,6 +120,7 @@ model planoAssinatura {
   excluido              Boolean?
   imagemPlanoAssinatura String           @default("")
   assinatura            assinatura[]
+  imagensPlano          imagensPlano[]
   planoCarrinho         planoCarrinho[]
   planoCategoria        planoCategoria[]
 }
@@ -134,6 +135,7 @@ model produto {
   marca                     String
   excluido                  Boolean
   imagemProduto             String              @default("")
+  imagensProduto            imagensProduto[]
   itemCarrinho              itemCarrinho[]
   itemCompra                itemCompra[]
   produtosCategoria         produtosCategoria[]
@@ -188,4 +190,20 @@ model planoCategoria {
   planoAssinatura planoAssinatura @relation(fields: [idPlano], references: [idPlanoAssinatura], onDelete: NoAction)
 
   @@id([idPlano, idCategoria])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model imagensPlano {
+  idImagem        BigInt          @id(map: "imagemPlano_pkey") @default(autoincrement())
+  idPlano         BigInt
+  caminho         String?
+  planoAssinatura planoAssinatura @relation(fields: [idPlano], references: [idPlanoAssinatura], onDelete: NoAction, map: "imagemPlano_idPlano_fkey")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model imagensProduto {
+  idImagem  BigInt  @id(map: "imagemProduto_pkey") @default(autoincrement())
+  idProduto BigInt
+  caminho   String?
+  produto   produto @relation(fields: [idProduto], references: [idProduto], onDelete: NoAction, map: "imagemProduto_idProduto_fkey")
 }
