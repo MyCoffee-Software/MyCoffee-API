@@ -11,6 +11,7 @@ export default () => {
     
     const uploadPath = path.join(path.resolve(__dirname), UPLOADS_PATH)
     const uploadPaths = []
+    uploadPaths.push(path.join(uploadPath, '/temp'))
     uploadPaths.push(path.join(uploadPath, SOBRE_PATH))
     uploadPaths.push(path.join(uploadPath, CONTATO_PATH))
     uploadPaths.push(path.join(uploadPath, IMAGEM_USUARIO_PATH))
