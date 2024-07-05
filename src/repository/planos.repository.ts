@@ -24,12 +24,11 @@ async function getAll(paginacao: { pagina: number, limite: number }): Promise<Pl
             return plano;
         }))
 
-
-        await Promise.all(planos.map(async (plano) => {
+        for (const plano of planos){
             plano.imagens = (await prisma.imagensPlano.findMany({
                 where: {idPlano: plano.id}
             })).map((r) => r.caminho)
-        }))
+        }
 
         return planos;
     }

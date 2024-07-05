@@ -54,11 +54,11 @@ async function getAll(paginacao: {pagina: number, limite: number}): Promise<Prod
         
         }))
 
-        await Promise.all(produtos.map(async (produto) => {
+        for (const produto of produtos) {
             produto.imagens = (await prisma.imagensProduto.findMany({
                 where: {idProduto: produto.id}
             })).map((r) => r.caminho)
-        }))
+        }
 
         return produtos
     }
@@ -93,11 +93,11 @@ async function getByTexto(paginacao: {pagina: number, limite: number}, texto: st
             return produto;
     
         }))
-        await Promise.all(produtos.map(async (produto) => {
+        for (const produto of produtos) {
             produto.imagens = (await prisma.imagensProduto.findMany({
                 where: {idProduto: produto.id}
             })).map((r) => r.caminho)
-        }))
+        }
 
         return produtos
     }
@@ -128,12 +128,11 @@ async function getByCategoria(paginacao: {pagina: number, limite: number}, idCat
             return produto;
         }))
 
-        await Promise.all(produtos.map(async (produto) => {
+        for (const produto of produtos) {
             produto.imagens = (await prisma.imagensProduto.findMany({
                 where: {idProduto: produto.id}
             })).map((r) => r.caminho)
-        }))
-
+        }
         return paginate(produtos, paginacao.pagina, paginacao.limite);
     }
 
@@ -166,11 +165,11 @@ async function getByCategoriaTexto(paginacao: {pagina: number, limite: number}, 
             return produto;
         }))
 
-        await Promise.all(produtos.map(async (produto) => {
+        for (const produto of produtos) {
             produto.imagens = (await prisma.imagensProduto.findMany({
                 where: {idProduto: produto.id}
             })).map((r) => r.caminho)
-        }))
+        }
 
         return paginate(produtos, paginacao.pagina, paginacao.limite);
     }    
