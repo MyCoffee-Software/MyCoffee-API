@@ -1,4 +1,5 @@
 import {z} from 'zod'
+import { DateSchema } from './dateSchema'
 export const idSchema = z.object({
     id: z.number()
 })
@@ -24,6 +25,28 @@ export const produtoGetQuerySchema = z.union([
         texto: z.string().optional()
     })
 ])
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     DataInicialFinal:
+ *       type: object
+ *       properties:
+ *         dataInicial:
+ *           type: string
+ *           description: Data inicial no formato AAAA-MM-DD
+ *           example: "2024-05-01"
+ *         dataFinal:
+ *           type: string
+ *           description: Data final no formato AAAA-MM-DD
+ *           example: "2024-05-01"
+ *         
+ */
+export const DataInicialFinalSchema = z.object({
+    dataInicial: DateSchema,
+    dataFinal: DateSchema
+})
 
 
 

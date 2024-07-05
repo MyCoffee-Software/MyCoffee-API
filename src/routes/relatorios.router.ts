@@ -1,82 +1,88 @@
 import { Request, Response, Router } from "express";
-import queryParamConversion from "../middleware/queryParamConversion";
-import controller from "../controllers/plano.controller";
+import authorization from "../middleware/authorizationMiddleware";
+import safeBodyParser from "../middleware/safeBodyParser";
+import { DataInicialFinalSchema } from "../utils/QueryParamsSchemas";
+import controller from "../controllers/relatorio.controller";
 
 
 const RelatoriosRouter = Router();
 
-// /**
-//  * @swagger
-//  * tags:
-//  *   name: Relatorios
-//  *   description: API para gerenciar os relatórios
-//  */
+/**
+ * @swagger
+ * /relatorios/resumo-vendas-periodo:
+ *   post:
+ *     summary: Gera relatório de vendas por período
+ *     tags: [Relatorios]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/DataInicialFinal'
+ *     responses:
+ *       201:
+ *         description: Relatório gerado
+ *       '401':
+ *         description: Não foi possível gerar o relatório
+ */
+RelatoriosRouter.post('/resumo-vendas-periodo',
+    authorization("Administrador"),
+    safeBodyParser(DataInicialFinalSchema),
+    controller.ResumoVendasPeriodo
+)
 
-// /**
-//  * @swagger
-//  * /relatorios:
-//  *   get:
-//  *     summary: Lista produtos
-//  *     description: Retorna os produtos, de acordo com a parametrização
-//  *     tags: [Relatorios]
-//  *     parameters:
-//  *     - in: path
-//  *       name: id
-//  *       description: Id do produto desejado
-//  *       required: false
-//  *       schema:
-//  *         type: number
-//  *     - in: path
-//  *       name: categoria
-//  *       description: Id da categoria desejada como filtro
-//  *       required: false
-//  *       schema:
-//  *         type: number
-//  *     - in: path
-//  *       name: text
-//  *       description: Texto relacionado desejado como filtro
-//  *       required: false
-//  *       schema:
-//  *         type: string
-//  *     responses:
-//  *       200:
-//  *         description: Retorna uma lista de clientes
-//  */
+/**
+ * @swagger
+ * /relatorios/resumo-vendas-produto:
+ *   post:
+ *     summary: Gera relatório de produtos vendidos em determinado período
+ *     tags: [Relatorios]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/DataInicialFinal'
+ *     responses:
+ *       201:
+ *         description: Relatório gerado
+ *       '401':
+ *         description: Não foi possível gerar o relatório
+ */
+RelatoriosRouter.post('/resumo-vendas-produto',
+    authorization("Administrador"),
+    safeBodyParser(DataInicialFinalSchema),
+    controller.ResumoVendasPorProduto
+)
 
-// ProdutosRouter.get('/', queryParamConversion({ id: "int", pagina: "int", limite: "int"}), controller.get);
-
-// /**
-//  * @swagger
-//  * /planos:
-//  *   get:
-//  *     summary: Obtém um ou todos os planos
-//  *     tags: [Relatorios]
-//  *     parameters:
-//  *       - in: query
-//  *         name: limite
-//  *         schema:
-//  *           type: integer
-//  *           description: A quantidade de itens a ser retornada
-//  *           required: false
-//  *       - in: query
-//  *         name: pagina
-//  *         schema:
-//  *           type: integer
-//  *           description: A página de itens a ser retornada
-//  *           required: false
-//  *       - in: query
-//  *         name: id
-//  *         schema:
-//  *           type: integer
-//  *           description: O id do plano a ser retornada
-//  *           required: false
-//  * 
-//  *     responses:
-//  *       '200':
-//  *         description: Plano(s) retornado com sucesso
-//  *       '401':
-//  *         description: Não autorizado
-//  */
-// PlanosRouter.get('/', queryParamConversion({ id: "int", pagina: "int", limite: "int"}), controller.get);
+/**
+ * @swagger
+ * /relatorios/resumo-vendas-cliente:
+ *   post:
+ *     summary: Gera relatório de vendas por cliente em determinado período
+ *     tags: [Relatorios]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/DataInicialFinal'
+ *     responses:
+ *       201:
+ *         description: Relatório gerado
+ *       '401':
+ *         description: Não foi possível gerar o relatório
+ */
+RelatoriosRouter.post('/resumo-vendas-cliente',
+    authorization("Administrador"),
+    safeBodyParser(DataInicialFinalSchema),
+    controller.ResumoVendasPorCliente
+)
 
 export default RelatoriosRouter;
