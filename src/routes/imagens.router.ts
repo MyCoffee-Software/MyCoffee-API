@@ -55,7 +55,7 @@ const upload = multer({ storage });
  *         description: Erro ao adicionar a imagem ao produto.
  */
 ImagensRouter.post('/produtos/:nome', 
-    authorization("Gerenciar Produto"),
+    authorization("Administrador"),
     upload.single("imagem"),
     controller.addToProduto
 )
@@ -92,7 +92,7 @@ ImagensRouter.post('/produtos/:nome',
  *         description: Erro ao adicionar a imagem ao plano.
  */
 ImagensRouter.post('/planos/:nome', 
-    authorization("Gerenciar Assinatura"),
+    authorization("Administrador"),
     upload.single("imagem"),
     controller.addToPlano
 )

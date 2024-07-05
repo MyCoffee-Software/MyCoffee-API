@@ -59,15 +59,15 @@ async function getById(id: number): Promise<Plano> {
     return null;
 }
 
-async function create(plano: Plano): Promise<Plano> {
+async function create(newPlano: Plano): Promise<Plano> {
     const queryResult = await prisma.planoAssinatura.create({
         data: {
-            nomePlanoAssinatura: plano.nome,
-            descontoPorcentual: plano.desconto,
-            precoMensal: plano.precoMensal,
-            precoAnual: plano.precoAnual,
-            ativo: plano.ativo,
-            descricao: plano.descricao,
+            nomePlanoAssinatura: newPlano.nome,
+            descontoPorcentual: newPlano.desconto,
+            precoMensal: newPlano.precoMensal,
+            precoAnual: newPlano.precoAnual,
+            ativo: newPlano.ativo,
+            descricao: newPlano.descricao,
             excluido: false,
         }
     })
@@ -84,7 +84,7 @@ async function create(plano: Plano): Promise<Plano> {
             excluido: queryResult.excluido,
         }
 
-        const promises = plano.imagens.map(async (i) => {
+        const promises = newPlano.imagens.map(async (i) => {
             return await prisma.imagensPlano.create({
                 data: {
                     caminho: i,
@@ -99,15 +99,15 @@ async function create(plano: Plano): Promise<Plano> {
     }
 }
 
-async function update(plano: Partial<Plano>, idPlanoAssinatura: number) {
+async function update(newPlano: Partial<Plano>, idPlanoAssinatura: number) {
     const queryResult = await prisma.planoAssinatura.update({
         data: {
-            nomePlanoAssinatura: plano.nome,
-            descontoPorcentual: plano.desconto,
-            precoMensal: plano.precoMensal,
-            precoAnual: plano.precoAnual,
-            ativo: plano.ativo,
-            descricao: plano.descricao,
+            nomePlanoAssinatura: newPlano.nome,
+            descontoPorcentual: newPlano.desconto,
+            precoMensal: newPlano.precoMensal,
+            precoAnual: newPlano.precoAnual,
+            ativo: newPlano.ativo,
+            descricao: newPlano.descricao,
         },
         where: { idPlanoAssinatura, excluido: false }
     });
@@ -124,7 +124,7 @@ async function update(plano: Partial<Plano>, idPlanoAssinatura: number) {
             excluido: queryResult.excluido,
         }
 
-        const promises = plano.imagens.map(async (i) => {
+        const promises = newPlano.imagens.map(async (i) => {
             return await prisma.imagensPlano.create({
                 data: {
                     caminho: i,

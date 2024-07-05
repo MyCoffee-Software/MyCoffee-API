@@ -31,8 +31,8 @@ import { CategoriaSchema } from './categoria';
  *           type: string
  *           description: Descrição dos atrativos do plano
  *           example: 20
- *         imagemPlanoAssinatura:
- *           type: string
+ *         imagens:
+ *           type: array
  *           description: Caminho da imagem
  *           example: ""
  */

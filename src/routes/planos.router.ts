@@ -75,7 +75,7 @@ PlanosRouter.get('/', queryParamConversion({ id: "int", pagina: "int", limite: "
  *         description: Dados inválidos
  */
 PlanosRouter.post('/',
-    authorization('Gerenciar Assinatura'),
+    authorization('Administrador'),
     safeBodyParser(PlanoSchema), 
     controller.create)
 
@@ -111,7 +111,7 @@ PlanosRouter.post('/',
  *         description: Dados inválidos
  */
 PlanosRouter.put('/', 
-    authorization('Gerenciar Assinatura'),
+    authorization('Administrador'),
     queryParamConversion({id: 'int'}),
     safeQueryParser(idSchema), 
     safeBodyParser(PlanoSchema.partial()), 
@@ -143,7 +143,7 @@ PlanosRouter.put('/',
  *         description: Dados inválidos
  */
 PlanosRouter.delete('/',
-    authorization('Gerenciar Assinatura'),
+    authorization('Administrador'),
     queryParamConversion({id: 'int'}),
     safeQueryParser(idSchema),
     controller.Delete
@@ -184,7 +184,7 @@ PlanosRouter.delete('/',
  *         description: Dados inválidos
  */
 PlanosRouter.put('/categorias/',
-    authorization("Gerenciar Assinatura"),
+    authorization("Administrador"),
     queryParamConversion({id: "int"}),
     safeQueryParser(idSchema),
     safeBodyParser(idArraySchema),

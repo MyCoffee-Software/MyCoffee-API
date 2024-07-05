@@ -63,7 +63,7 @@ AssinaturasRouter.get('/',
  *         description: Não autorizado
  */
 AssinaturasRouter.get('/gerente/',
-    authorization("Gerenciar Assinatura"),
+    authorization("Administrador"),
     queryParamConversion({id: 'int', pagina: 'int', limite: 'int'}),
     safeQueryParser(idOuPaginacaoSchema),
     controller.get

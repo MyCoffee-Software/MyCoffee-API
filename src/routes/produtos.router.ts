@@ -87,7 +87,7 @@ ProdutosRouter.get('/',
  *         description: Não autorizado
  */
 ProdutosRouter.post('/',
-    authorization('Gerenciar Produto'),
+    authorization('Administrador'),
     safeBodyParser(ProdutoSchema), 
     controller.create)
 
@@ -123,7 +123,7 @@ ProdutosRouter.post('/',
  *         description: Dados inválidos
  */
 ProdutosRouter.put('/', 
-    authorization('Gerenciar Produto'),
+    authorization('Administrador'),
     queryParamConversion({id: 'int'}),
     safeQueryParser(idSchema), 
     safeBodyParser(ProdutoSchema), 
@@ -164,7 +164,7 @@ ProdutosRouter.put('/',
  *         description: Dados inválidos
  */
 ProdutosRouter.put('/categorias',
-    authorization('Gerenciar Produto'),
+    authorization('Administrador'),
     queryParamConversion({id: 'int'}),
     safeQueryParser(idSchema), 
     safeBodyParser(idArraySchema), 
