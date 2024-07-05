@@ -8,7 +8,7 @@ async function getByUsuario(usuario: Usuario): Promise<Cliente> {
         const Cliente: Cliente = {
             ...usuario,
             cpf: queryCliente.cpf,
-            //data_nascimento: queryCliente.dataNascimento,
+            data_nascimento: queryCliente.dataNascimento,
             endereco: queryCliente.endereco,
             cep: queryCliente.cep,
             estado: queryCliente.estado,
@@ -26,12 +26,14 @@ async function getById(id: number): Promise<Cliente> {
         where: { idCliente: id, excluido: false }
     });
 
+    console.log('data ->', queryCliente.dataNascimento, typeof queryCliente.dataNascimento)
+
     if (queryCliente != undefined) {
         const cliente: Cliente = {
             id: Number(queryCliente.idCliente),
             cpf: queryCliente.cpf,
             endereco: queryCliente.endereco,
-            //data_nascimento: queryCliente.dataNascimento,
+            data_nascimento: queryCliente.dataNascimento,
             telefone: queryCliente.telefone,
             cep: queryCliente.cep,
             estado: queryCliente.estado,
@@ -56,7 +58,7 @@ async function getAll(paginacao: { pagina: number, limite: number }): Promise<Cl
                 id: Number(r.idCliente),
                 cpf: r.cpf,
                 endereco: r.endereco,
-                //data_nascimento: r.dataNascimento,
+                data_nascimento: r.dataNascimento,
                 telefone: r.telefone,
                 cep: r.cep,
                 estado: r.estado,
@@ -77,7 +79,7 @@ async function create(novoCliente: Cliente): Promise<Cliente>{
             idCliente: novoCliente.id,
             cpf: novoCliente.cpf,
             endereco: novoCliente.endereco,
-            //dataNascimento: novoCliente.data_nascimento,
+            dataNascimento: novoCliente.data_nascimento,
             telefone: novoCliente.telefone,
             cep: novoCliente.cep,
             estado: novoCliente.estado,
@@ -92,7 +94,7 @@ async function create(novoCliente: Cliente): Promise<Cliente>{
             id: Number(queryResult.idCliente),
             cpf: queryResult.cpf,
             endereco: queryResult.endereco,
-            //data_nascimento: queryResult.dataNascimento,
+            data_nascimento: queryResult.dataNascimento,
             telefone: queryResult.telefone,
             cep: queryResult.cep,
             estado: queryResult.estado,
@@ -110,7 +112,7 @@ async function update(novoCliente: Cliente, idCliente: number): Promise<Cliente>
         data: {
             cpf: novoCliente.cpf,
             endereco: novoCliente.endereco,
-            //dataNascimento: novoCliente.data_nascimento,
+            dataNascimento: novoCliente.data_nascimento,
             telefone: novoCliente.telefone,
             cep: novoCliente.cep,
             estado: novoCliente.estado,
@@ -128,7 +130,7 @@ async function update(novoCliente: Cliente, idCliente: number): Promise<Cliente>
             id: Number(queryResult.idCliente),
             cpf: queryResult.cpf,
             endereco: queryResult.endereco,
-            //data_nascimento: queryResult.dataNascimento,
+            data_nascimento: queryResult.dataNascimento,
             telefone: queryResult.telefone,
             cep: queryResult.cep,
             estado: queryResult.estado,
@@ -156,7 +158,7 @@ async function Delete(idCliente: number): Promise<Cliente> {
             id: Number(queryResult.idCliente),
             cpf: queryResult.cpf,
             endereco: queryResult.endereco,
-            //data_nascimento: queryResult.dataNascimento,
+            data_nascimento: queryResult.dataNascimento,
             telefone: queryResult.telefone,
             cep: queryResult.cep,
             estado: queryResult.estado,

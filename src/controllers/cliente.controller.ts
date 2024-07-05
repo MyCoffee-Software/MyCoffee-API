@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import repository from "../repository/repository";
 import { z } from "zod";
 import { clienteSchema } from "../models/cliente";
+import { DateSchema } from "../utils/dateSchema";
 
 async function get(req: Request, res: Response) {
     const query = req.newQuery
@@ -34,12 +35,16 @@ async function get(req: Request, res: Response) {
 }
 
 async function create(req: Request, res: Response) {
-    const safeParse = clienteSchema.safeParse(req.body);
+    let body = req.body;
+    body.data_nascimento = DateSchema.parse(body.data_nascimento)
+    console.log(body, body.usuario)
 
-    const usuario = await repository.usuario.create(safeParse.data.usuario);
+    const usuario = await repository.usuario.create(body.usuario);
+
+    console.log('aqui')
     if (usuario != undefined){
-        safeParse.data.id = usuario.id;
-        const resultado = await repository.cliente.create(safeParse.data);
+        body.id = usuario.id;
+        const resultado = await repository.cliente.create(body);
         resultado.usuario = usuario;
         res.status(200).json(resultado);
     }       
@@ -48,7 +53,7 @@ async function create(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     const Query = req.newQuery
     const Body = req.body
-
+    Body.data_nascimento = DateSchema.parse(Body.data_nascimento)
     const usuario = await repository.usuario.update(Body.usuario, Query.id)
     if (usuario != undefined){
     const resultado = await repository.cliente.update(Body, Query.id)

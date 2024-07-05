@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { DateSchema } from '../utils/dateSchema';
 
 export const AssinaturaSchema = z.object({
     idAssinatura: z.number().optional(),
@@ -7,8 +8,8 @@ export const AssinaturaSchema = z.object({
     formaPagamento: z.string(),
     enderecoEntrega: z.string(),
     cpfSignatario: z.string(),
-    dataInicio: z.date(),
-    dataFim: z.date(),
+    dataInicio: DateSchema,
+    dataFim: DateSchema,
     valor: z.number(),
   });
 

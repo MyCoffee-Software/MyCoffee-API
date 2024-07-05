@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { itemCompraSchema } from "./itemCompra";
+import { DateSchema } from "../utils/dateSchema";
 
 /**
  * @swagger
@@ -44,7 +45,7 @@ export const CompraSchema = z.object({
     idCompra: z.number(),
     idCliente: z.number(),
     cpfComprador: z.string(),
-    dataPagamento: z.date(),
+    dataPagamento: DateSchema,
     formaPagamento: z.string(),
     enderecoEntrega: z.string(),
     produtos: z.array(itemCompraSchema)

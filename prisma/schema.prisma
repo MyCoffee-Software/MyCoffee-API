@@ -144,10 +144,10 @@ model produto {
 model usuario {
   id                                             BigInt       @id @unique @default(autoincrement())
   email                                          String       @unique
-  senha                                          String       @unique
-  nome_completo                                  String       @unique
+  senha                                          String
+  nome_completo                                  String
   excluido                                       Boolean
-  imagem                                         String       @unique @default("")
+  imagem                                         String       @default("")
   admin_admin_idAdminTousuario                   admin?       @relation("admin_idAdminTousuario")
   cliente_cliente_idClienteTousuario             cliente?     @relation("cliente_idClienteTousuario")
   funcionario_funcionario_idFuncionarioTousuario funcionario? @relation("funcionario_idFuncionarioTousuario")

@@ -3,6 +3,7 @@ import { Assinatura } from "../models/assinatura";
 import repository from "../repository/repository";
 import { Usuario } from "../models/usuario";
 import { Periodo } from "../models/periodo";
+import { DateSchema } from "../utils/dateSchema";
 
 async function getSelf(req: Request, res: Response){
     const User = req.user as Usuario
@@ -29,7 +30,8 @@ async function get(req: Request, res: Response){
 async function create(req: Request, res: Response){
     const User = req.user as Usuario
     const Body = req.body as Assinatura
-
+    Body.dataInicio = DateSchema.parse(Body.dataInicio)
+    Body.dataFim = DateSchema.parse(Body.dataFim)
     try {
         const result = await repository.assinatura.create(Body, User.id)    
         if(result != undefined){
@@ -66,6 +68,9 @@ async function cancelar(req: Request, res: Response){
 
 async function update(req: Request, res: Response){
     const Body = req.body as Assinatura
+    
+    Body.dataInicio = DateSchema.parse(Body.dataInicio)
+    Body.dataFim = DateSchema.parse(Body.dataFim)
 
     const result = await repository.assinatura.update(Body)
 

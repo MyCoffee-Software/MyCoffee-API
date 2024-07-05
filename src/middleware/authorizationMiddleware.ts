@@ -9,17 +9,18 @@ function authorizationMiddleware(...permissoesRequeridas: Array<Permissao>){
         const permissoesDadas = await AuthController.getPermissoes(req.user)
         console.log('PERMISSÕES - ', permissoesDadas)
 
-        if (permissoesDadas != undefined){
+        if (permissoesDadas != undefined){    
+            if (permissoesDadas.includes('Administrador')){
+                return next()
+            }
+
             if (permissoesRequeridas.includes('Cliente')){
                 if (permissoesDadas.includes('Cliente')){
                     return next()
                 }
             } else {
-                if (permissoesDadas.includes('Administrador')){
-                    return next()
-                }
         
-                if (permissoesRequeridas.every((permissao) => permissoesDadas.includes(permissao))){
+                if (permissoesRequeridas.some((permissao) => permissoesDadas.includes(permissao))){
                     return next()
                 }
             }

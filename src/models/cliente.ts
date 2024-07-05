@@ -1,3 +1,4 @@
+import { DateSchema } from "../utils/dateSchema";
 import { Usuario, isUsuario, usuarioSchema } from "./usuario";
 import { z } from 'zod';
 
@@ -48,7 +49,7 @@ export const clienteSchema = z.object({
     usuario: usuarioSchema,
     cpf: z.string(),
     telefone: z.string(),
-    //data_nascimento: z.coerce.date(),
+    data_nascimento: DateSchema,
     endereco: z.string(),
     cep: z.string(),
     estado: z.string(),
