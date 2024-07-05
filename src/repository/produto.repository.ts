@@ -50,12 +50,14 @@ async function getAll(paginacao: {pagina: number, limite: number}): Promise<Prod
                 excluido: r.excluido,
             }
 
+            return produto;
+        
+        }))
+
+        await Promise.all(produtos.map(async (produto) => {
             produto.imagens = (await prisma.imagensProduto.findMany({
                 where: {idProduto: produto.id}
             })).map((r) => r.caminho)
-
-            return produto;
-        
         }))
 
         return produtos
@@ -88,12 +90,13 @@ async function getByTexto(paginacao: {pagina: number, limite: number}, texto: st
                 excluido: r.excluido,
             }
 
+            return produto;
+    
+        }))
+        await Promise.all(produtos.map(async (produto) => {
             produto.imagens = (await prisma.imagensProduto.findMany({
                 where: {idProduto: produto.id}
             })).map((r) => r.caminho)
-
-            return produto;
-    
         }))
 
         return produtos
@@ -122,11 +125,13 @@ async function getByCategoria(paginacao: {pagina: number, limite: number}, idCat
                 excluido: r.excluido,
             }
 
+            return produto;
+        }))
+
+        await Promise.all(produtos.map(async (produto) => {
             produto.imagens = (await prisma.imagensProduto.findMany({
                 where: {idProduto: produto.id}
             })).map((r) => r.caminho)
-
-            return produto;
         }))
 
         return paginate(produtos, paginacao.pagina, paginacao.limite);
@@ -158,11 +163,13 @@ async function getByCategoriaTexto(paginacao: {pagina: number, limite: number}, 
                 excluido: r.excluido,
             }
 
+            return produto;
+        }))
+
+        await Promise.all(produtos.map(async (produto) => {
             produto.imagens = (await prisma.imagensProduto.findMany({
                 where: {idProduto: produto.id}
             })).map((r) => r.caminho)
-
-            return produto;
         }))
 
         return paginate(produtos, paginacao.pagina, paginacao.limite);

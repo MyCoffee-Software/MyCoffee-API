@@ -21,11 +21,14 @@ async function getAll(paginacao: { pagina: number, limite: number }): Promise<Pl
                 excluido: r.excluido,
             }
 
-            plano.imagens = await prisma.imagensPlano.findMany({
-                where: { idPlano: plano.id }
-            }).then((r) => r.map((r) => r.caminho));
-
             return plano;
+        }))
+
+
+        await Promise.all(planos.map(async (plano) => {
+            plano.imagens = (await prisma.imagensPlano.findMany({
+                where: {idPlano: plano.id}
+            })).map((r) => r.caminho)
         }))
 
         return planos;
