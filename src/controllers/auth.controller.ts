@@ -87,4 +87,30 @@ async function getUser(req: Request, res: Response) {
     }
 }
 
-export default {login, getPermissoes, getUser}
+async function changePasswordAsUser(req: Request, res: Response){
+    const Body = req.body
+    const User = req.user
+
+    if (User == undefined){
+        res.status(500).send("Você não está logado.")
+    }
+
+    if (await repository.usuario.changePassword(User.id, Body.oldPassword, Body.newPassord)){
+        res.status(200).send('Senha alterada.')
+    } else {
+        res.status(400).send('Senha antiga errada.')
+    }
+}
+
+async function changePasswordAsAdmin(req: Request, res: Response){
+    const Body = req.body
+    const Query = req.newQuery
+
+    if (await repository.usuario.changePassword(Query.id, Body.oldPassword, Body.newPassord)){
+        res.status(200).send('Senha alterada.')
+    } else {
+        res.status(400).send('Senha antiga errada.')
+    }
+}
+
+export default {login, getPermissoes, getUser, changePasswordAsAdmin, changePasswordAsUser}

@@ -56,6 +56,24 @@ async function getById(id: number): Promise<Usuario> {
     return null    
 }
 
+async function changePassword(idUsuario: number, oldPassword: string, newPassord: string): Promise<boolean>{
+    const usuario = await getById(idUsuario)
+    if (await verifyPassword(usuario.email, oldPassword)){
+        await prisma.usuario.update({
+            data: {
+                senha: await bycript.hash(newPassord, BYCRIPT_ROUNDS)
+            },
+            where: {
+                id: idUsuario
+            }
+        })
+
+        return true
+    }
+
+    return false
+}
+
 async function verifyPassword(email: string, senha: string): Promise<boolean>{
     const queryUsuario = await prisma.usuario.findUnique({where: {email, excluido: false}})
     if (queryUsuario != undefined){
@@ -157,4 +175,4 @@ async function Delete(id: number): Promise <Usuario> {
         return usuario
     }
 }
-export default {getByEmail, getById, verifyPassword, create, update, Delete}
+export default {getByEmail, getById, verifyPassword, create, update, Delete, changePassword}

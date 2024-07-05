@@ -44,3 +44,27 @@ export function isUsuario(obj: any): obj is Usuario {
         typeof obj.excluido === 'boolean' &&
         typeof obj.imagem === 'string';
 }
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     NewPassword:
+ *       type: object
+ *       properties:
+ *         oldPassword:
+ *           type: string
+ *           description: The current password of the user.
+ *         newPassword:
+ *           type: string
+ *           description: The new password to be set by the user.
+ *       required:
+ *         - oldPassword
+ *         - newPassword
+ */
+export const NewPasswordSchema = z.object({
+    oldPassword: z.string(),
+    newPassword: z.string()
+})
+
+export type NewPassword = z.infer<typeof NewPasswordSchema>
