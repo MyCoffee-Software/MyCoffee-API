@@ -1,38 +1,85 @@
-# MyCoffee-API (Backend)
+# ☕ MyCoffee API
+##  ✏️ Descrição
+Esta é uma aplicação backend desenvolvida em TypeScript. Ela utiliza PostgreSQL como banco de dados e JWT para autenticação.
 
-Esta é uma API backend simples construída usando TypeScript.
+## ✅ Pré-requisitos
+- Node.js
+- TypeScript
+- PostgreSQL
+- Prisma
+## 🪛 Instalação
+1. Clone o repositório:
 
-## Pré-requisitos
 
-- Node.js (v14.x ou superior)
-- npm (Node Package Manager)
+``` bash
+git clone <URL_DO_REPOSITORIO>
+cd <NOME_DO_REPOSITORIO>
+```
+2. Instale as dependências:
+```bash
+npm install
+```
+3. Configure as variáveis de ambiente. Crie um arquivo ```.env``` na raiz do projeto com o seguinte conteúdo:
+```env
+DATABASE_URL=<URL>
 
-## Instalação
+API_PORT=3000
 
-1. Clone este repositório:
+JWT_SECRET="SECRET"
+JWT_EXPIRATION="50m"
 
-2. Navegue até o diretório do projeto:
+UPLOADS_PATH="../../uploads"
+SOBRE_PATH="/descricoes"
+SOBRE_FILE_NAME="sobre.html"
+CONTATO_PATH="/descricoes/"
+CONTATO_FILE_NAME="contato.html"
+IMAGEM_USUARIO_PATH="/imagens/usuarios/"
+IMAGENS_PRODUTO_PATH="/imagens/produtos"
+IMAGENS_PLANO_PATH="/imagens/planos"
+```
+- `DATABASE_URL`: Caminho do banco de dados PostgreSQL.
+- `API_PORT`: Porta que será exposta pela aplicação.
+- `JWT_SECRET`: Chave de encoding do token JWT.
+- `JWT_EXPIRATION`: Duração da chave JWT.
+- Variáveis `*_PATH`: Caminhos dos diretórios onde haverá salvamento de arquivos durante a execução.
+4. Gere os arquivos do Prisma:
 
-3. Instale as dependências:
-```npm install``` ou ```npm i```
 
-## Configuração
-Configure as variáveis de ambiente:
+```bash
+npx prisma db pull
+npx prisma generate
+```
+## ▶️ Scripts
+- Para iniciar o servidor em modo de desenvolvimento:
 
-Crie um arquivo .env na raiz do projeto
-Defina as variáveis de ambiente necessárias, orientando-se pelo arquivo ```.env.example``` contido neste repositório
+```bash
+npm run dev
+```
+- Para iniciar o servidor em modo de produção:
 
-## Execução
-### Execute a build do servidor:
-```npm run build```
+```bash
+npm start
+```
+- Para compilar o projeto TypeScript:
 
-### Execute o próprio servidor:
-```npm start```
+```bash
+npm run build
+```
+## 🏗️ Estrutura do Projeto
+- `src/`: Contém o código-fonte da aplicação.
+- `dist/`: Contém os arquivos compilados.
+- `prisma/`: Contém os arquivos de configuração do Prisma.
 
-### Execute em modo desenvolvedor:
-```npm run dev```
+## 🎲 Comandos úteis do Prisma
+- Sincronizar o banco de dados:
 
-# PRONTO!
-Agora a aplicação está disponível para uso.
+```bash
+npx prisma db pull
+```
+- Gerar o cliente do Prisma:
 
-Para acessar a documentação das rotas, acesse a rota ```/api-docs``` e utilize o SWAGGER.
+```bash
+npx prisma generate
+```
+## 📚 Documentação da API
+A documentação da API pode ser acessada via endpoint `/api-docs` pela interface Swagger.
